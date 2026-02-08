@@ -8,10 +8,11 @@ export const defaultOptions: GridOptions = {
 	l: "│",
 	li: "┤",
 	r: "│",
-	ri: "├ ",
+	ri: "├",
 	tl: "┌",
 	tr: "┐",
 	br: "┘",
 	bl: "└",
+	i: "┼",
 	fill: String.fromCharCode(160),
 }

@@ -11,5 +11,6 @@ export default interface GridOptions {
 	tr: string
 	br: string
 	bl: string
+	i: string
 	fill: string
 }
