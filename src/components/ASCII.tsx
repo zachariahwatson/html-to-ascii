@@ -279,7 +279,7 @@ export default function ASCII({ children }: { children: React.ReactNode }) {
 		}
 
 		const observer = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
+			mutations.forEach(() => {
 				//console.log("DOM changed:", mutation.type)
 				// Handle the DOM change here
 				update()
