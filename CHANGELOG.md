@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-02-09
+
+### Added
+
+- Best practice component library packaging stuff
+
+### Changed
+
+- Moved components to /lib
+
 ## [0.1.0] - 2026-02-08
 
 ### Added
