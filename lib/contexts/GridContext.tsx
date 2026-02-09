@@ -1,5 +1,5 @@
 import { createContext } from "react"
-import type GridData from "../types/GridData"
+import type { GridData } from "../types/GridData"
 import { defaultOptions } from "../utils/defaultOptions"
 
 export const GridContext = createContext<GridData>({

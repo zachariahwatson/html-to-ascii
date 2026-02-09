@@ -1,0 +1,4 @@
+{
+	"extends": "./tsconfig.app.json",
+	"include": ["lib", "lib/contexts", "lib/hooks", "lib/providers", "lib/types", "lib/utils", "lib/components"]
+}

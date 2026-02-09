@@ -1,4 +1,4 @@
-import type GridOptions from "../types/GridOptions"
+import type { GridOptions } from "../types/GridOptions"
 
 export const defaultOptions: GridOptions = {
 	t: "─",

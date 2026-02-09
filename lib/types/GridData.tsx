@@ -1,6 +1,6 @@
-import type GridOptions from "./GridOptions"
+import type { GridOptions } from "./GridOptions"
 
-export default interface GridData {
+export interface GridData {
 	fontHeight: number | 0
 	courierRatio: number
 	fontWidth: number

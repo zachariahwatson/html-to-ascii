@@ -1,7 +1,8 @@
 import { useLayoutEffect, useRef, useState } from "react"
-import type GridData from "../types/GridData"
-import type Rect from "../types/Rect"
+import type { GridData } from "../types/GridData"
+import type { Rect } from "../types/Rect"
 import { useGridContext } from "../hooks/useGridContext"
+import { useReveal } from "../hooks/useReveal"
 
 const getIndex = (x: number, y: number, grid: GridData) => {
 	const col = (x / grid.fontWidth) | 0
@@ -265,33 +266,25 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 	})
 }
 
-export default function ASCII({ children }: { children: React.ReactNode }) {
+export function ASCII({ children }: { children: React.ReactNode }) {
 	const parentRef = useRef<HTMLDivElement | null>(null)
 	const grid = useGridContext()
 	const [rects, setRects] = useState<Rect[] | null>([])
+	const reveal = useReveal(grid.grid, 30)
 
 	useLayoutEffect(() => {
 		if (!parentRef.current) return
 
-		const update = () => {
-			const r = getElements(parentRef)
-			setRects(r)
+		let frame: number
+
+		const loop = () => {
+			setRects(getElements(parentRef))
+			frame = requestAnimationFrame(loop)
 		}
 
-		const observer = new MutationObserver((mutations) => {
-			mutations.forEach(() => {
-				//console.log("DOM changed:", mutation.type)
-				// Handle the DOM change here
-				update()
-			})
-		})
+		loop()
 
-		observer.observe(parentRef.current, {
-			attributes: true,
-			childList: true,
-			subtree: true,
-			characterData: true,
-		})
+		return () => cancelAnimationFrame(frame)
 	}, [])
 
 	// clear canvas
@@ -314,7 +307,7 @@ export default function ASCII({ children }: { children: React.ReactNode }) {
 			</div>
 			{parentRef.current && (
 				<div style={{ width: grid.truncWidth, height: grid.truncHeight }} className="leading-none wrap-break-word">
-					{grid.grid.join("")}
+					{reveal.join("")}
 				</div>
 			)}
 		</div>
