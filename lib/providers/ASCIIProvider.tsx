@@ -1,6 +1,6 @@
 import { GridContext } from "../contexts/GridContext"
-import useWindowDimensions from "../hooks/useWindowDimensions"
-import type GridData from "../types/GridData"
+import { useWindowDimensions } from "../hooks/useWindowDimensions"
+import type { GridData } from "../types/GridData"
 import { defaultOptions } from "../utils/defaultOptions"
 
 function initGrid({ width, height }: { width: number; height: number }): GridData {
@@ -30,7 +30,7 @@ function initGrid({ width, height }: { width: number; height: number }): GridDat
 	}
 }
 
-export default function ASCIIProvider({ children }: { children: React.ReactNode }) {
+export function ASCIIProvider({ children }: { children: React.ReactNode }) {
 	const { width, height } = useWindowDimensions()
 	const grid = initGrid({ width, height })
 	return <GridContext.Provider value={grid}>{children}</GridContext.Provider>

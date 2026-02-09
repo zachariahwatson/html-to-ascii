@@ -1,4 +1,4 @@
-export default interface GridOptions {
+export interface GridOptions {
 	t: string
 	ti: string
 	b: string

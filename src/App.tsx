@@ -1,4 +1,4 @@
-import ASCII from "./components/ASCII"
+import ASCII from "../lib/components/ASCII"
 
 function App() {
 	return (
