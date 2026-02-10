@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-02-10
+
+### Changed
+
+- Renamed /types file extensions to .d.ts
+
+### Fixed
+
+- Added missing ASCIIProvider export (oops)
+
 ## [0.2.1] - 2026-02-09
 
 ### Fixed
