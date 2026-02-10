@@ -1,5 +1,5 @@
-export { ASCII } from "./components/ASCII.tsx"
+export { ASCII } from "./components/ASCII"
 
-export { useGridContext } from "./hooks/useGridContext.tsx"
+export { useGridContext } from "./hooks/useGridContext"
 
-export { ASCIIProvider } from "./providers/ASCIIProvider.tsx"
+export { ASCIIProvider } from "./providers/ASCIIProvider"

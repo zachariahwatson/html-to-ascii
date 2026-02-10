@@ -1,4 +1,22 @@
 {
 	"extends": "./tsconfig.app.json",
-	"include": ["lib", "lib/contexts", "lib/hooks", "lib/providers", "lib/types", "lib/utils", "lib/components"]
+	"compilerOptions": {
+		"noEmit": false,
+		"allowImportingTsExtensions": false,
+		"moduleResolution": "node",
+		"outDir": "dist",
+		"declaration": true,
+		"declarationMap": true,
+		"emitDeclarationOnly": false
+	},
+	"include": [
+		"lib",
+		"lib/contexts",
+		"lib/hooks",
+		"lib/providers",
+		"lib/types",
+		"lib/utils",
+		"lib/components",
+		"lib/index.ts"
+	]
 }

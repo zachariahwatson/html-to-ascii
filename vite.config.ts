@@ -10,17 +10,27 @@ export default defineConfig({
 		react(),
 		tailwindcss(),
 		dts({
-			tsconfigPath: resolve(__dirname, "tsconfig.lib.json"),
+			tsconfigPath: resolve(__dirname, "./tsconfig.lib.json"),
 		}),
 	],
 	build: {
 		lib: {
-			entry: resolve(__dirname, "lib/index.js"),
-			formats: ["es"],
+			entry: resolve(__dirname, "lib/index.ts"),
+			name: "html-to-ascii",
+			fileName: (format) => `index.${format}.js`,
 		},
 		copyPublicDir: false,
 		rollupOptions: {
-			external: ["react", "react/jsx-runtime"],
+			external: ["react", "react-dom", "react/jsx-runtime"],
+			output: {
+				globals: {
+					react: "React",
+					"react-dom": "ReactDOM",
+				},
+			},
 		},
+		sourcemap: true,
+		emptyOutDir: true,
+		minify: true,
 	},
 })
