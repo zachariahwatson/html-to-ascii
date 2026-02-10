@@ -266,7 +266,7 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 	})
 }
 
-export function ASCII({ children }: { children: React.ReactNode }) {
+export const ASCII = ({ children }: { children: React.ReactNode }) => {
 	const parentRef = useRef<HTMLDivElement | null>(null)
 	const grid = useGridContext()
 	const [rects, setRects] = useState<Rect[] | null>([])
