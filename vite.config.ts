@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
 import { resolve } from "path"
 import dts from "vite-plugin-dts"
+import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js"
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,6 +13,7 @@ export default defineConfig({
 		dts({
 			tsconfigPath: resolve(__dirname, "./tsconfig.lib.json"),
 		}),
+		cssInjectedByJsPlugin(),
 	],
 	build: {
 		lib: {
