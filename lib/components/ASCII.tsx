@@ -3,11 +3,21 @@ import type { GridData } from "../types/GridData"
 import type { Rect } from "../types/Rect"
 import { useGridContext } from "../hooks/useGridContext"
 import { useReveal } from "../hooks/useReveal"
+import type { GridOptions } from "../types/GridOptions"
 
 const getIndex = (x: number, y: number, grid: GridData) => {
 	const col = (x / grid.fontWidth) | 0
 	const row = (y / grid.fontHeight) | 0
 	return row * grid.cols + col
+}
+
+function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: string) {
+	for (const c of cl) {
+		if (c.startsWith(`ascii-${option}-`)) {
+			return c.slice(`ascii-${option}-`.length)
+		}
+	}
+	return fallback
 }
 
 const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
@@ -16,15 +26,41 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const rectTop = Math.floor(rect.rect.top / grid.fontHeight) * grid.fontHeight
 	const rectBottom = Math.floor(rect.rect.bottom / grid.fontHeight) * grid.fontHeight
 
+	const cl = rect.classList
+
+	const hasASCII = cl.contains("ascii")
+	const hasBorder = cl.contains("ascii-border")
+	const hasL = cl.contains("ascii-border-l")
+	const hasR = cl.contains("ascii-border-r")
+	const hasT = cl.contains("ascii-border-t")
+	const hasB = cl.contains("ascii-border-b")
+	const hasTL = cl.contains("ascii-border-tl")
+	const hasTR = cl.contains("ascii-border-tr")
+	const hasBR = cl.contains("ascii-border-br")
+	const hasBL = cl.contains("ascii-border-bl")
+	const hasNoFill = cl.contains("ascii-no-fill")
+	const hasText = cl.contains("ascii-text")
+
+	const lChar = getCharOverride(cl, "l", grid.options.l)
+	const rChar = getCharOverride(cl, "r", grid.options.r)
+	const tChar = getCharOverride(cl, "t", grid.options.t)
+	const bChar = getCharOverride(cl, "b", grid.options.b)
+	const tlChar = getCharOverride(cl, "tl", grid.options.tl)
+	const trChar = getCharOverride(cl, "tr", grid.options.tr)
+	const brChar = getCharOverride(cl, "br", grid.options.br)
+	const blChar = getCharOverride(cl, "bl", grid.options.bl)
+	const fillChar = getCharOverride(cl, "fill", grid.options.fill)
+	const liChar = getCharOverride(cl, "li", grid.options.li)
+	const riChar = getCharOverride(cl, "ri", grid.options.ri)
+	const tiChar = getCharOverride(cl, "ti", grid.options.ti)
+	const biChar = getCharOverride(cl, "bi", grid.options.bi)
+	const iChar = getCharOverride(cl, "i", grid.options.i)
+
+	//TODO: associate grid cells with the local options of the dom element - right now the intersections only look for the default characters
+
 	//verticals
 	//left
-	if (
-		(rect.classList.contains("ascii-border") &&
-			!["ascii-border-l", "ascii-border-r", "ascii-border-t", "ascii-border-b"].some((c) =>
-				rect.classList.contains(c),
-			)) ||
-		rect.classList.contains("ascii-border-l")
-	) {
+	if (hasL || ((hasASCII || hasBorder) && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
 		for (let i = rectTop + grid.fontHeight; i < rectBottom; i += grid.fontHeight) {
 			const l = getIndex(rectLeft, i, grid)
 
@@ -33,21 +69,15 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.b:
 				case grid.options.tr:
 				case grid.options.br:
-					grid.grid[l] = grid.options.li
+					grid.grid[l] = liChar
 					break
 				default:
-					grid.grid[l] = grid.options.l
+					grid.grid[l] = lChar
 			}
 		}
 	}
 	//right
-	if (
-		(rect.classList.contains("ascii-border") &&
-			!["ascii-border-l", "ascii-border-r", "ascii-border-t", "ascii-border-b"].some((c) =>
-				rect.classList.contains(c),
-			)) ||
-		rect.classList.contains("ascii-border-r")
-	) {
+	if (hasR || ((hasASCII || hasBorder) && !hasL && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
 		for (let i = rectTop + grid.fontHeight; i < rectBottom; i += grid.fontHeight) {
 			const r = getIndex(rectRight, i, grid)
 
@@ -56,23 +86,17 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.b:
 				case grid.options.tl:
 				case grid.options.bl:
-					grid.grid[r] = grid.options.ri
+					grid.grid[r] = riChar
 					break
 				default:
-					grid.grid[r] = grid.options.r
+					grid.grid[r] = rChar
 			}
 		}
 	}
 
 	//horizontals
 	//top
-	if (
-		(rect.classList.contains("ascii-border") &&
-			!["ascii-border-l", "ascii-border-r", "ascii-border-t", "ascii-border-b"].some((c) =>
-				rect.classList.contains(c),
-			)) ||
-		rect.classList.contains("ascii-border-t")
-	) {
+	if (hasT || ((hasASCII || hasBorder) && !hasL && !hasR && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
 		for (let i = rectLeft + grid.fontWidth; i < rectRight; i += grid.fontWidth) {
 			const t = getIndex(i, rectTop, grid)
 
@@ -81,21 +105,15 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.r:
 				case grid.options.bl:
 				case grid.options.br:
-					grid.grid[t] = grid.options.ti
+					grid.grid[t] = tiChar
 					break
 				default:
-					grid.grid[t] = grid.options.t
+					grid.grid[t] = tChar
 			}
 		}
 	}
 	//bottom
-	if (
-		(rect.classList.contains("ascii-border") &&
-			!["ascii-border-l", "ascii-border-r", "ascii-border-t", "ascii-border-b"].some((c) =>
-				rect.classList.contains(c),
-			)) ||
-		rect.classList.contains("ascii-border-b")
-	) {
+	if (hasB || ((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasTL && !hasTR && !hasBR && !hasBL)) {
 		for (let i = rectLeft + grid.fontWidth; i < rectRight; i += grid.fontWidth) {
 			const b = getIndex(i, rectBottom, grid)
 			switch (grid.grid[b]) {
@@ -103,10 +121,10 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.r:
 				case grid.options.tl:
 				case grid.options.tr:
-					grid.grid[b] = grid.options.bi
+					grid.grid[b] = biChar
 					break
 				default:
-					grid.grid[b] = grid.options.b
+					grid.grid[b] = bChar
 			}
 		}
 	}
@@ -114,56 +132,59 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	//corners
 	//tl
 	if (
-		["ascii-border", "ascii-border-tl"].some((c) => rect.classList.contains(c)) ||
-		["ascii-border-l", "ascii-border-t"].every((c) => rect.classList.contains(c))
+		hasTL ||
+		(hasT && hasL) ||
+		((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTR && !hasBR && !hasBL)
 	) {
 		const tl = getIndex(rectLeft, rectTop, grid)
 		switch (grid.grid[tl]) {
 			case grid.options.t:
 			case grid.options.b:
 			case grid.options.tr:
-				grid.grid[tl] = grid.options.bi
+				grid.grid[tl] = biChar
 				break
 			case grid.options.l:
 			case grid.options.r:
 			case grid.options.bl:
-				grid.grid[tl] = grid.options.ri
+				grid.grid[tl] = riChar
 				break
 			case grid.options.br:
-				grid.grid[tl] = grid.options.i
+				grid.grid[tl] = iChar
 				break
 			default:
-				grid.grid[tl] = grid.options.tl
+				grid.grid[tl] = tlChar
 		}
 	}
 	//tr
 	if (
-		["ascii-border", "ascii-border-tr"].some((c) => rect.classList.contains(c)) ||
-		["ascii-border-r", "ascii-border-t"].every((c) => rect.classList.contains(c))
+		hasTR ||
+		(hasT && hasR) ||
+		((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasBR && !hasBL)
 	) {
 		const tr = getIndex(rectRight, rectTop, grid)
 		switch (grid.grid[tr]) {
 			case grid.options.t:
 			case grid.options.b:
 			case grid.options.tl:
-				grid.grid[tr] = grid.options.bi
+				grid.grid[tr] = biChar
 				break
 			case grid.options.l:
 			case grid.options.r:
 			case grid.options.br:
-				grid.grid[tr] = grid.options.li
+				grid.grid[tr] = liChar
 				break
 			case grid.options.bl:
-				grid.grid[tr] = grid.options.i
+				grid.grid[tr] = iChar
 				break
 			default:
-				grid.grid[tr] = grid.options.tr
+				grid.grid[tr] = trChar
 		}
 	}
 	//br
 	if (
-		["ascii-border", "ascii-border-br"].some((c) => rect.classList.contains(c)) ||
-		["ascii-border-r", "ascii-border-b"].every((c) => rect.classList.contains(c))
+		hasBR ||
+		(hasB && hasR) ||
+		((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBL)
 	) {
 		const br = getIndex(rectRight, rectBottom, grid)
 		if (rect.type === "textarea") {
@@ -173,58 +194,59 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.l:
 				case grid.options.r:
 				case grid.options.tr:
-					grid.grid[br] = grid.options.li
+					grid.grid[br] = liChar
 					break
 				case grid.options.t:
 				case grid.options.b:
 				case grid.options.bl:
-					grid.grid[br] = grid.options.ti
+					grid.grid[br] = tiChar
 					break
 				case grid.options.tl:
-					grid.grid[br] = grid.options.i
+					grid.grid[br] = iChar
 					break
 				default:
-					grid.grid[br] = grid.options.br
+					grid.grid[br] = brChar
 			}
 		}
 	}
 
 	//bl
 	if (
-		["ascii-border", "ascii-border-bl"].some((c) => rect.classList.contains(c)) ||
-		["ascii-border-l", "ascii-border-b"].every((c) => rect.classList.contains(c))
+		hasBL ||
+		(hasB && hasL) ||
+		((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR)
 	) {
 		const bl = getIndex(rectLeft, rectBottom, grid)
 		switch (grid.grid[bl]) {
 			case grid.options.l:
 			case grid.options.r:
 			case grid.options.tl:
-				grid.grid[bl] = grid.options.ri
+				grid.grid[bl] = riChar
 				break
 			case grid.options.t:
 			case grid.options.b:
 			case grid.options.br:
-				grid.grid[bl] = grid.options.ti
+				grid.grid[bl] = tiChar
 				break
 			case grid.options.tr:
-				grid.grid[bl] = grid.options.i
+				grid.grid[bl] = iChar
 				break
 			default:
-				grid.grid[bl] = grid.options.bl
+				grid.grid[bl] = blChar
 		}
 	}
 
 	//fill
-	if (rect.classList.contains("ascii-fill")) {
+	if (!hasNoFill) {
 		for (let y = rectTop + grid.fontHeight; y < rectBottom; y += grid.fontHeight) {
 			for (let x = rectLeft + grid.fontWidth; x < rectRight; x += grid.fontWidth) {
-				grid.grid[getIndex(x, y, grid)] = grid.options.fill
+				grid.grid[getIndex(x, y, grid)] = fillChar
 			}
 		}
 	}
 
 	//characters
-	if (rect.classList.contains("ascii-text")) {
+	if (hasASCII || hasText) {
 		rect.characters.forEach((c) => {
 			const cRectLeft = Math.floor(c.rect.left / grid.fontWidth) * grid.fontWidth
 			const cRectBottom = Math.floor(c.rect.bottom / grid.fontHeight) * grid.fontHeight
