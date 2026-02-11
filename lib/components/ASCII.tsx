@@ -291,16 +291,16 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 export const ASCII = ({
 	children,
 	gridReveal = true,
-	speed = 30,
+	revealSpeed = 30,
 }: {
 	children: React.ReactNode
 	gridReveal?: boolean
-	speed?: number
+	revealSpeed?: number
 }) => {
 	const parentRef = useRef<HTMLDivElement | null>(null)
 	const grid = useGridContext()
 	const [rects, setRects] = useState<Rect[] | null>([])
-	const reveal = gridReveal ? useReveal(grid.grid, speed) : grid.grid
+	const reveal = gridReveal ? useReveal(grid.grid, revealSpeed) : grid.grid
 
 	useLayoutEffect(() => {
 		if (!parentRef.current) return
