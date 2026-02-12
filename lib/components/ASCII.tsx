@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react"
+import { useLayoutEffect, useReducer, useRef, useState } from "react"
 import type { GridData } from "../types/GridData"
 import type { Rect } from "../types/Rect"
 import { useGridContext } from "../hooks/useGridContext"
@@ -299,8 +299,10 @@ export const ASCII = ({
 }) => {
 	const parentRef = useRef<HTMLDivElement | null>(null)
 	const grid = useGridContext()
-	const [rects, setRects] = useState<Rect[] | null>([])
+	//const [rects, setRects] = useState<Rect[] | null>([])
+	const rectsRef = useRef<Rect[]>([])
 	const reveal = gridReveal ? useReveal(grid.grid, revealSpeed) : grid.grid
+	const [, forceRender] = useReducer((x) => x + 1, 0)
 
 	useLayoutEffect(() => {
 		if (!parentRef.current) return
@@ -308,8 +310,10 @@ export const ASCII = ({
 		let frame: number
 
 		const loop = () => {
-			setRects(getElements(parentRef))
+			rectsRef.current = getElements(parentRef)
 			frame = requestAnimationFrame(loop)
+
+			forceRender()
 		}
 
 		loop()
@@ -323,12 +327,12 @@ export const ASCII = ({
 		grid.grid[i] = String.fromCharCode(160)
 	}
 
-	rects?.forEach((rect) => {
+	rectsRef.current.forEach((rect) => {
 		drawRect({ rect, grid })
 	})
 
 	return (
-		<div ref={parentRef}>
+		<div ref={parentRef} className="leading-none">
 			<div
 				style={{ width: grid.truncWidth, height: grid.truncHeight }}
 				className="absolute opacity-0 top-0 left-0 bg-none pointer-events-none"
@@ -336,9 +340,22 @@ export const ASCII = ({
 				{children}
 			</div>
 			{parentRef.current && (
-				<div style={{ width: grid.truncWidth, height: grid.truncHeight }} className="leading-none wrap-break-word">
-					{reveal.join("")}
+				<div style={{ width: grid.truncWidth, height: grid.truncHeight }}>
+					{Array.from({ length: grid.rows }, (_, r) => {
+						let str = ""
+						const start = r * grid.cols
+						const end = start + grid.cols
+
+						for (let i = start; i < end; i++) {
+							str += grid.grid[i]
+						}
+
+						return <p key={r}>{str}</p>
+					})}
 				</div>
+				// <div style={{ width: grid.truncWidth, height: grid.truncHeight }} className="leading-none wrap-break-word">
+				// 	{String.raw`${reveal.join("")}`}
+				// </div>
 			)}
 		</div>
 	)
