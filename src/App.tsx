@@ -6,12 +6,15 @@ function App() {
 			<div className="flex justify-center">
 				<div className="w-[500px] h-72 border text-center ascii-border ascii-text whitespace-pre">
 					{String.raw`
-_________        
-\_   ___ \___  __
-/    \  \/\  \/ /
-\     \____\   / 
- \______  / \_/  
-        \/       
+   /$$                           /$$    
+  | $$                          | $$    
+ /$$$$$$    /$$$$$$   /$$$$$$$ /$$$$$$  
+|_  $$_/   /$$__  $$ /$$_____/|_  $$_/  
+  | $$    | $$$$$$$$|  $$$$$$   | $$    
+  | $$ /$$| $$_____/ \____  $$  | $$ /$$
+  |  $$$$/|  $$$$$$$ /$$$$$$$/  |  $$$$/
+   \___/   \_______/|_______/    \___/  
+                                        
 					`}
 					{/* <div className="m-4 ascii-border-tl ascii-border-br h-8" />
 					<div className="m-2 border h-8 ascii-border-r ascii-border-b" />
@@ -21,7 +24,7 @@ _________
 						a link
 					</a> */}
 				</div>
-				<textarea className="w-64 h-64 ascii-border" defaultValue={"test"}></textarea>
+				{/* <textarea className="w-64 h-64 ascii-border" defaultValue={"test"}></textarea>
 				<br></br>
 				<div className="p-4">
 					{" "}
@@ -34,7 +37,7 @@ _________
 						<option value="mercedes">Mercedes</option>
 						<option value="audi">Audi</option>
 					</select>
-				</div>
+				</div> */}
 			</div>
 			{/* <img
 				src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmancelona-vet.com%2Fwp-content%2Fuploads%2F2022%2F04%2FPuppy-Care.png&f=1&nofb=1&ipt=fdd8b957d76c0c6eda753c0b89ca41de8642c16b654126bf5cd82e61c0d114ea"
