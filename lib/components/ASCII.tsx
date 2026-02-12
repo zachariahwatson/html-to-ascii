@@ -339,7 +339,7 @@ export const ASCII = ({
 			>
 				{children}
 			</div>
-			{parentRef.current && (
+			{parentRef.current && rectsRef.current && (
 				<div style={{ width: grid.truncWidth, height: grid.truncHeight }}>
 					{Array.from({ length: grid.rows }, (_, r) => {
 						let str = ""
@@ -347,7 +347,7 @@ export const ASCII = ({
 						const end = start + grid.cols
 
 						for (let i = start; i < end; i++) {
-							str += grid.grid[i]
+							str += reveal[i] ?? String.fromCharCode(160)
 						}
 
 						return <p key={r}>{str}</p>
