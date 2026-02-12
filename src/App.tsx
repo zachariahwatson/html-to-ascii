@@ -4,14 +4,22 @@ function App() {
 	return (
 		<ASCII>
 			<div className="flex justify-center">
-				<div className="w-72 h-48 border text-center p-4 ascii-border">
-					<div className="m-4 ascii-border-tl ascii-border-br h-8" />
+				<div className="w-[500px] h-72 border text-center ascii-border ascii-text whitespace-pre">
+					{String.raw`
+_________        
+\_   ___ \___  __
+/    \  \/\  \/ /
+\     \____\   / 
+ \______  / \_/  
+        \/       
+					`}
+					{/* <div className="m-4 ascii-border-tl ascii-border-br h-8" />
 					<div className="m-2 border h-8 ascii-border-r ascii-border-b" />
 					<button className="ascii-border ascii-text">button</button>
 					<br></br>
 					<a href="https://en.wikipedia.org/wiki/Block_Elements" className="ascii-border ascii-text">
 						a link
-					</a>
+					</a> */}
 				</div>
 				<textarea className="w-64 h-64 ascii-border" defaultValue={"test"}></textarea>
 				<br></br>
