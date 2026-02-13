@@ -1,7 +1,7 @@
 {
 	"name": "html-to-ascii",
 	"private": false,
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"type": "module",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -15,6 +15,23 @@
 	"files": [
 		"dist"
 	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zachariahwatson/html-to-ascii"
+	},
+	"keywords": [
+		"react",
+		"ascii",
+		"html-to-ascii",
+		"ascii-wrapper",
+		"ascii-dom",
+		"ascii-overlay",
+		"ascii-react",
+		"ascii-component",
+		"react-component"
+	],
+	"author": "Zachariah Watson",
+	"license": "MIT",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc -b ./tsconfig.lib.json && vite build",
