@@ -1,4 +1,4 @@
-import { useLayoutEffect, useReducer, useRef, useState } from "react"
+import { useLayoutEffect, useReducer, useRef } from "react"
 import type { GridData } from "../types/GridData"
 import type { Rect } from "../types/Rect"
 import { useGridContext } from "../hooks/useGridContext"
