@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.3.1] - 2026-02-12
+
+### Removed
+
+- Unused imports
+
 ## [0.3.0] - 2026-02-12
 
 ### Added
