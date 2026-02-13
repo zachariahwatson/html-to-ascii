@@ -16,6 +16,9 @@ function App() {
    \___/   \_______/|_______/    \___/  
                                         
 					`}
+					<a href="https://en.wikipedia.org/wiki/Block_Elements" className="ascii-border ascii-text underline">
+						a link
+					</a>
 					{/* <div className="m-4 ascii-border-tl ascii-border-br h-8" />
 					<div className="m-2 border h-8 ascii-border-r ascii-border-b" />
 					<button className="ascii-border ascii-text">button</button>
