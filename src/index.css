@@ -3,7 +3,6 @@
 :root {
 	font-family: "Courier New", Courier, monospace;
 	height: 100vh;
-	@apply m-0;
 }
 
 body {
