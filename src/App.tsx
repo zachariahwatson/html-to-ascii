@@ -41,11 +41,10 @@ function App() {
 						<option value="audi">Audi</option>
 					</select>
 				</div> */}
+				<div className="ascii p-4">
+					<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmancelona-vet.com%2Fwp-content%2Fuploads%2F2022%2F04%2FPuppy-Care.png&f=1&nofb=1&ipt=fdd8b957d76c0c6eda753c0b89ca41de8642c16b654126bf5cd82e61c0d114ea"></img>
+				</div>
 			</div>
-			{/* <img
-				src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmancelona-vet.com%2Fwp-content%2Fuploads%2F2022%2F04%2FPuppy-Care.png&f=1&nofb=1&ipt=fdd8b957d76c0c6eda753c0b89ca41de8642c16b654126bf5cd82e61c0d114ea"
-				className="ascii-border opacity-100 p-10 mt-4"
-			></img> */}
 		</ASCII>
 	)
 }

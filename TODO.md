@@ -1,7 +1,6 @@
 # Todo
 
 - [ ] Add image to ASCII functionality
-- [ ] Add regular image functionality
 - [ ] Make it to where parent override classes transfer to their children
 - [ ] Add `<textarea>` functionality (see input text, resize, etc.)
 - [ ] Add `<select>` functionality (see selection value)
@@ -9,3 +8,4 @@
 - [ ] Add `<ul>` and `<ol>` bullet points and numbers
 - [ ] Add section about grid reveal to README.md
 - [ ] Add demo page
+- [x] Add regular image functionality #feature images-general #release 0.4.0
