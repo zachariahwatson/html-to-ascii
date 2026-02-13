@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-...crickets...
+### Added
+
+- Added general image functionality
 
 ## [0.3.2] - 2026-02-12
 
