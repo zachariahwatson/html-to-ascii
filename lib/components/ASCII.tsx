@@ -335,7 +335,7 @@ export const ASCII = ({
 		<div ref={parentRef} className="leading-none">
 			<div
 				style={{ width: grid.truncWidth, height: grid.truncHeight }}
-				className="absolute opacity-0 top-0 left-0 bg-none pointer-events-none"
+				className="absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none"
 			>
 				{children}
 			</div>
