@@ -248,8 +248,8 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	//characters
 	if (hasASCII || hasText) {
 		rect.characters.forEach((c) => {
-			const cRectLeft = Math.floor(c.rect.left / grid.fontWidth) * grid.fontWidth
-			const cRectBottom = Math.floor(c.rect.bottom / grid.fontHeight) * grid.fontHeight
+			const cRectLeft = Math.round(c.rect.left / grid.fontWidth) * grid.fontWidth
+			const cRectBottom = Math.round(c.rect.bottom / grid.fontHeight) * grid.fontHeight
 			grid.grid[getIndex(cRectLeft, cRectBottom, grid)] = c.char
 		})
 	}
