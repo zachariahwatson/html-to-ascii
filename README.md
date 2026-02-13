@@ -7,9 +7,6 @@
 
 ```
 
-[![NPM Version][npm-image]][npm-url]
-[![Downloads Stats][npm-downloads]][npm-url]
-
 html-to-ascii is a React component that dynamically converts an HTML page into pure, selectable, ASCII text. None of that fake Canvas trickery here!
 
 [[Changelog](https://github.com/zachariahwatson/html-to-ascii/blob/main/CHANGELOG.md)]
@@ -17,7 +14,7 @@ html-to-ascii is a React component that dynamically converts an HTML page into p
 ## Installation
 
 ```sh
-npm install html-to-ascii
+npm i html-to-ascii
 ```
 
 Add `<ASCIIProvider>` to the root of your project:
