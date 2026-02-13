@@ -5,9 +5,7 @@ import { useGridContext } from "../hooks/useGridContext"
 import { useReveal } from "../hooks/useReveal"
 import type { GridOptions } from "../types/GridOptions"
 
-const getIndex = (x: number, y: number, grid: GridData) => {
-	const col = (x / grid.fontWidth) | 0
-	const row = (y / grid.fontHeight) | 0
+const getIndex = (col: number, row: number, grid: GridData) => {
 	return row * grid.cols + col
 }
 
@@ -21,10 +19,17 @@ function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: 
 }
 
 const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
-	const rectLeft = Math.floor(rect.rect.left / grid.fontWidth) * grid.fontWidth
-	const rectRight = Math.floor(rect.rect.right / grid.fontWidth) * grid.fontWidth
-	const rectTop = Math.floor(rect.rect.top / grid.fontHeight) * grid.fontHeight
-	const rectBottom = Math.floor(rect.rect.bottom / grid.fontHeight) * grid.fontHeight
+	// const rectLeft = Math.floor(rect.rect.left / grid.fontWidth) * grid.fontWidth
+	// const rectRight = Math.floor(rect.rect.right / grid.fontWidth) * grid.fontWidth
+	// const rectTop = Math.floor(rect.rect.top / grid.fontHeight) * grid.fontHeight
+	// const rectBottom = Math.floor(rect.rect.bottom / grid.fontHeight) * grid.fontHeight
+	const invFontWidth = 1 / grid.fontWidth
+	const invFontHeight = 1 / grid.fontHeight
+
+	const leftCol = Math.floor(rect.rect.left * invFontWidth)
+	const rightCol = Math.floor(rect.rect.right * invFontWidth)
+	const topRow = Math.floor(rect.rect.top * invFontHeight)
+	const bottomRow = Math.floor(rect.rect.bottom * invFontHeight)
 
 	const cl = rect.classList
 
@@ -61,8 +66,8 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	//verticals
 	//left
 	if (hasL || ((hasASCII || hasBorder) && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
-		for (let i = rectTop + grid.fontHeight; i < rectBottom; i += grid.fontHeight) {
-			const l = getIndex(rectLeft, i, grid)
+		for (let row = topRow + 1; row < bottomRow; row++) {
+			const l = getIndex(leftCol, row, grid)
 
 			switch (grid.grid[l]) {
 				case grid.options.t:
@@ -78,8 +83,8 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	}
 	//right
 	if (hasR || ((hasASCII || hasBorder) && !hasL && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
-		for (let i = rectTop + grid.fontHeight; i < rectBottom; i += grid.fontHeight) {
-			const r = getIndex(rectRight, i, grid)
+		for (let row = topRow + 1; row < bottomRow; row++) {
+			const r = getIndex(rightCol, row, grid)
 
 			switch (grid.grid[r]) {
 				case grid.options.t:
@@ -97,8 +102,8 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	//horizontals
 	//top
 	if (hasT || ((hasASCII || hasBorder) && !hasL && !hasR && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
-		for (let i = rectLeft + grid.fontWidth; i < rectRight; i += grid.fontWidth) {
-			const t = getIndex(i, rectTop, grid)
+		for (let col = leftCol + 1; col < rightCol; col++) {
+			const t = getIndex(col, topRow, grid)
 
 			switch (grid.grid[t]) {
 				case grid.options.l:
@@ -114,8 +119,8 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	}
 	//bottom
 	if (hasB || ((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasTL && !hasTR && !hasBR && !hasBL)) {
-		for (let i = rectLeft + grid.fontWidth; i < rectRight; i += grid.fontWidth) {
-			const b = getIndex(i, rectBottom, grid)
+		for (let col = leftCol + 1; col < rightCol; col++) {
+			const b = getIndex(col, bottomRow, grid)
 			switch (grid.grid[b]) {
 				case grid.options.l:
 				case grid.options.r:
@@ -136,7 +141,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		(hasT && hasL) ||
 		((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTR && !hasBR && !hasBL)
 	) {
-		const tl = getIndex(rectLeft, rectTop, grid)
+		const tl = getIndex(leftCol, topRow, grid)
 		switch (grid.grid[tl]) {
 			case grid.options.t:
 			case grid.options.b:
@@ -161,7 +166,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		(hasT && hasR) ||
 		((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasBR && !hasBL)
 	) {
-		const tr = getIndex(rectRight, rectTop, grid)
+		const tr = getIndex(rightCol, topRow, grid)
 		switch (grid.grid[tr]) {
 			case grid.options.t:
 			case grid.options.b:
@@ -186,7 +191,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		(hasB && hasR) ||
 		((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBL)
 	) {
-		const br = getIndex(rectRight, rectBottom, grid)
+		const br = getIndex(rightCol, bottomRow, grid)
 		if (rect.type === "textarea") {
 			grid.grid[br] = "▼"
 		} else {
@@ -216,7 +221,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		(hasB && hasL) ||
 		((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR)
 	) {
-		const bl = getIndex(rectLeft, rectBottom, grid)
+		const bl = getIndex(leftCol, bottomRow, grid)
 		switch (grid.grid[bl]) {
 			case grid.options.l:
 			case grid.options.r:
@@ -238,9 +243,9 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 
 	//fill
 	if (!hasNoFill) {
-		for (let y = rectTop + grid.fontHeight; y < rectBottom; y += grid.fontHeight) {
-			for (let x = rectLeft + grid.fontWidth; x < rectRight; x += grid.fontWidth) {
-				grid.grid[getIndex(x, y, grid)] = fillChar
+		for (let row = topRow + 1; row < bottomRow; row++) {
+			for (let col = leftCol + 1; col < rightCol; col++) {
+				grid.grid[getIndex(col, row, grid)] = fillChar
 			}
 		}
 	}
@@ -248,9 +253,9 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	//characters
 	if (hasASCII || hasText) {
 		rect.characters.forEach((c) => {
-			const cRectLeft = Math.round(c.rect.left / grid.fontWidth) * grid.fontWidth
-			const cRectBottom = Math.round(c.rect.bottom / grid.fontHeight) * grid.fontHeight
-			grid.grid[getIndex(cRectLeft, cRectBottom, grid)] = c.char
+			const col = Math.floor(c.rect.left * invFontWidth)
+			const row = Math.floor(c.rect.bottom * invFontHeight)
+			grid.grid[getIndex(col, row, grid)] = c.char
 		})
 	}
 }
@@ -335,6 +340,7 @@ export const ASCII = ({
 		<div ref={parentRef} className="leading-none">
 			<div
 				style={{ width: grid.truncWidth, height: grid.truncHeight }}
+				//className="absolute top-0 left-0 bg-none pointer-events-none"
 				className="absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none"
 			>
 				{children}
