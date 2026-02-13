@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.3.2] - 2026-02-12
+
+### Added
+
+- Fleshed out package.json for npm
+- `<ASCII>` props in README.md
+- LICENSE file
+- TODO.md file
+
+### Fixed
+
+- Added correct linking in CHANGELOG.md
+
 ## [0.3.1] - 2026-02-12
 
 ### Removed
@@ -76,3 +89,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Basic functionality
 - ASCII box customization
 - Basic position change monitoring
+
+[0.3.2]: https://github.com/zachariahwatson/html-to-ascii/releases/tag/0.3.2
+[0.3.1]: https://github.com/zachariahwatson/html-to-ascii/releases/tag/0.3.1
+[0.3.0]: https://github.com/zachariahwatson/html-to-ascii/releases/tag/0.3.0
+[0.2.4]: https://github.com/zachariahwatson/html-to-ascii/releases/tag/0.2.4
+[0.2.3]: https://github.com/zachariahwatson/html-to-ascii/releases/tag/0.2.3
+[0.2.2]: https://github.com/zachariahwatson/html-to-ascii/releases/tag/0.2.2
+[0.2.1]: https://github.com/zachariahwatson/html-to-ascii/releases/tag/0.2.1
+[0.2.0]: https://github.com/zachariahwatson/html-to-ascii/releases/tag/0.2.0
+[0.1.0]: https://github.com/zachariahwatson/html-to-ascii/releases/tag/0.1.0
