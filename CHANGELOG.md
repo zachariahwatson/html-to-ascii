@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+...crickets...
+
+## [0.3.0] - 2026-02-12
+
+### Added
+
+- Granular local class name options adjustment (e.g. className="ascii ascii-b-+" sets the bottom border to "+")
+- ASCIIProvider props for customizing border, fill, corners, etc.
+- Basic README.md
+
+### Changed
+
+- Rendering should be a tad bit faster
+
+### Fixed
+
+- Backslashes in ASCII art etc. would force a new line when rendering the grid, breaking anything rendered thereafter
+
 ## [0.2.4] - 2026-02-10
 
 ### Fixed
