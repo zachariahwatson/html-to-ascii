@@ -14,7 +14,7 @@ html-to-ascii is a React component that dynamically converts an HTML page into p
 ## Installation
 
 ```sh
-npm install html-to-ascii
+npm i html-to-ascii
 ```
 
 Add `<ASCIIProvider>` to the root of your project:
