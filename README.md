@@ -78,7 +78,7 @@ html-to-ascii supports three interchangeable methods for customizing the look of
 #### 1. Adding props to `<ASCIIProvider>`:
 
 This method changes the global style for every element unless locally overridden.
-_(A full list of options can be seen [here](#api))_
+_(A full list of options can be seen [here](#asciiprovider))_
 
 ```html
 <!--set the left and right borders to ":"-->
@@ -99,7 +99,7 @@ Output
 
 #### 2. Using class names on elements inside of `<ASCII>` to enable certain ASCII features:
 
-_(A full list of class names can be seen [here](#api))_
+_(A full list of class names can be seen [here](#ascii))_
 
 ```jsx
 <ASCII>
@@ -128,7 +128,7 @@ Output
 
 #### 3. Using class names on elements inside of `<ASCII>` to override global styles:
 
-This method allows you to add local styling to a single element without changing the styles of other elements. _(A full list of override class names can be seen [here](#api))_
+This method allows you to add local styling to a single element without changing the styles of other elements. _(A full list of override class names can be seen [here](#ascii))_
 
 ```jsx
 <ASCII>
@@ -181,9 +181,11 @@ ASCII art can contain some weird character combinations, and sometimes that mess
 </ASCII>
 ```
 
-### API
+## API
 
-#### `<ASCIIProvider>` Props:
+## `<ASCIIProvider>`
+
+### Props:
 
 | Prop   | Type      | Default | Description           |
 | ------ | --------- | ------- | --------------------- |
@@ -202,7 +204,16 @@ ASCII art can contain some weird character combinations, and sometimes that mess
 | `i`    | `string?` | `'┼'`   | Four-way intersection |
 | `fill` | `string?` | `' '`   | Element fill          |
 
-#### `<ASCII>` Class names:
+## `<ASCII>`
+
+### Props:
+
+| Prop          | Type       | Default | Description                          |
+| ------------- | ---------- | ------- | ------------------------------------ |
+| `gridReveal`  | `boolean?` | `true`  | Toggle scan-style reveal of the grid |
+| `revealSpeed` | `number?`  | `30`    | Speed of the grid reveal             |
+
+### Class names:
 
 | Class name        | Description                                 |
 | ----------------- | ------------------------------------------- |
@@ -219,7 +230,7 @@ ASCII art can contain some weird character combinations, and sometimes that mess
 | `ascii-text`      | Enable text                                 |
 | `ascii-no-fill`   | Disable element's fill (will be "see-thru") |
 
-#### `<ASCII>` Override class names:
+### Override class names:
 
 Replace '#' with your desired character
 
