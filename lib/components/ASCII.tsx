@@ -77,6 +77,9 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.tr:
 				case grid.options.br:
 				case grid.options.i:
+				case grid.options.ri:
+				case grid.options.ti:
+				case grid.options.bi:
 					grid.grid[l] = liChar
 					break
 				default:
@@ -95,6 +98,9 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.tl:
 				case grid.options.bl:
 				case grid.options.i:
+				case grid.options.ri:
+				case grid.options.ti:
+				case grid.options.bi:
 					grid.grid[r] = riChar
 					break
 				default:
@@ -115,6 +121,9 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.bl:
 				case grid.options.br:
 				case grid.options.i:
+				case grid.options.li:
+				case grid.options.ri:
+				case grid.options.ti:
 					grid.grid[t] = tiChar
 					break
 				default:
@@ -132,6 +141,9 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.tl:
 				case grid.options.tr:
 				case grid.options.i:
+				case grid.options.li:
+				case grid.options.ri:
+				case grid.options.bi:
 					grid.grid[b] = biChar
 					break
 				default:
@@ -152,15 +164,19 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			case grid.options.t:
 			case grid.options.b:
 			case grid.options.tr:
+			case grid.options.bi:
 				grid.grid[tl] = biChar
 				break
 			case grid.options.l:
 			case grid.options.r:
 			case grid.options.bl:
+			case grid.options.ri:
 				grid.grid[tl] = riChar
 				break
 			case grid.options.br:
 			case grid.options.i:
+			case grid.options.li:
+			case grid.options.ti:
 				grid.grid[tl] = iChar
 				break
 			default:
@@ -178,15 +194,19 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			case grid.options.t:
 			case grid.options.b:
 			case grid.options.tl:
+			case grid.options.bi:
 				grid.grid[tr] = biChar
 				break
 			case grid.options.l:
 			case grid.options.r:
 			case grid.options.br:
+			case grid.options.li:
 				grid.grid[tr] = liChar
 				break
 			case grid.options.bl:
 			case grid.options.i:
+			case grid.options.ri:
+			case grid.options.ti:
 				grid.grid[tr] = iChar
 				break
 			default:
@@ -204,18 +224,22 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			grid.grid[br] = "▼"
 		} else {
 			switch (grid.grid[br]) {
-				case grid.options.l:
-				case grid.options.r:
-				case grid.options.tr:
-					grid.grid[br] = liChar
-					break
 				case grid.options.t:
 				case grid.options.b:
 				case grid.options.bl:
+				case grid.options.ti:
 					grid.grid[br] = tiChar
+					break
+				case grid.options.l:
+				case grid.options.r:
+				case grid.options.tr:
+				case grid.options.li:
+					grid.grid[br] = liChar
 					break
 				case grid.options.tl:
 				case grid.options.i:
+				case grid.options.ri:
+				case grid.options.bi:
 					grid.grid[br] = iChar
 					break
 				default:
@@ -232,18 +256,22 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	) {
 		const bl = getIndex(leftCol, bottomRow, grid)
 		switch (grid.grid[bl]) {
-			case grid.options.l:
-			case grid.options.r:
-			case grid.options.tl:
-				grid.grid[bl] = riChar
-				break
 			case grid.options.t:
 			case grid.options.b:
 			case grid.options.br:
+			case grid.options.ti:
 				grid.grid[bl] = tiChar
+				break
+			case grid.options.l:
+			case grid.options.r:
+			case grid.options.tl:
+			case grid.options.ri:
+				grid.grid[bl] = riChar
 				break
 			case grid.options.tr:
 			case grid.options.i:
+			case grid.options.li:
+			case grid.options.bi:
 				grid.grid[bl] = iChar
 				break
 			default:
