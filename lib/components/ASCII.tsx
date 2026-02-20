@@ -26,10 +26,12 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const invFontWidth = 1 / grid.fontWidth
 	const invFontHeight = 1 / grid.fontHeight
 
-	const leftCol = Math.floor(rect.rect.left * invFontWidth)
-	const rightCol = Math.floor(rect.rect.right * invFontWidth)
-	const topRow = Math.floor(rect.rect.top * invFontHeight)
-	const bottomRow = Math.floor(rect.rect.bottom * invFontHeight)
+	const trim = 0.001
+
+	const leftCol = Math.floor(rect.rect.left * invFontWidth + trim)
+	const rightCol = Math.floor(rect.rect.right * invFontWidth + trim)
+	const topRow = Math.floor(rect.rect.top * invFontHeight + trim)
+	const bottomRow = Math.floor(rect.rect.bottom * invFontHeight + trim)
 
 	const cl = rect.classList
 
@@ -340,8 +342,8 @@ export const ASCII = ({
 		<div ref={parentRef} className="leading-none">
 			<div
 				style={{ width: grid.truncWidth, height: grid.truncHeight }}
-				//className="absolute top-0 left-0 bg-none pointer-events-none"
-				className="absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none"
+				className="absolute top-0 left-0 bg-none pointer-events-none"
+				//className="absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none"
 			>
 				{children}
 			</div>
