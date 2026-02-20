@@ -205,10 +205,10 @@ ASCII art can contain some weird character combinations, and sometimes that mess
 
 ### Props:
 
-| Prop          | Type       | Default | Description                          |
-| ------------- | ---------- | ------- | ------------------------------------ |
-| `gridReveal`  | `boolean?` | `true`  | Toggle scan-style reveal of the grid |
-| `revealSpeed` | `number?`  | `30`    | Speed of the grid reveal             |
+| Prop             | Type       | Default | Description                                 |
+| ---------------- | ---------- | ------- | ------------------------------------------- |
+| `gridReveal`     | `boolean?` | `true`  | Toggle scan-style reveal of the grid        |
+| `revealDuration` | `number?`  | `1000`  | Duration of the grid reveal in milliseconds |
 
 ### Class names:
 
