@@ -76,6 +76,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.b:
 				case grid.options.tr:
 				case grid.options.br:
+				case grid.options.i:
 					grid.grid[l] = liChar
 					break
 				default:
@@ -93,6 +94,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.b:
 				case grid.options.tl:
 				case grid.options.bl:
+				case grid.options.i:
 					grid.grid[r] = riChar
 					break
 				default:
@@ -112,6 +114,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.r:
 				case grid.options.bl:
 				case grid.options.br:
+				case grid.options.i:
 					grid.grid[t] = tiChar
 					break
 				default:
@@ -128,6 +131,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.r:
 				case grid.options.tl:
 				case grid.options.tr:
+				case grid.options.i:
 					grid.grid[b] = biChar
 					break
 				default:
@@ -156,6 +160,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				grid.grid[tl] = riChar
 				break
 			case grid.options.br:
+			case grid.options.i:
 				grid.grid[tl] = iChar
 				break
 			default:
@@ -181,6 +186,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				grid.grid[tr] = liChar
 				break
 			case grid.options.bl:
+			case grid.options.i:
 				grid.grid[tr] = iChar
 				break
 			default:
@@ -209,6 +215,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 					grid.grid[br] = tiChar
 					break
 				case grid.options.tl:
+				case grid.options.i:
 					grid.grid[br] = iChar
 					break
 				default:
@@ -236,6 +243,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				grid.grid[bl] = tiChar
 				break
 			case grid.options.tr:
+			case grid.options.i:
 				grid.grid[bl] = iChar
 				break
 			default:
