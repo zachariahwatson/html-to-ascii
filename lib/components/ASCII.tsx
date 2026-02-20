@@ -1,4 +1,4 @@
-import { useLayoutEffect, useReducer, useRef } from "react"
+import { useEffect, useLayoutEffect, useReducer, useRef, useState } from "react"
 import type { GridData } from "../types/GridData"
 import type { Rect } from "../types/Rect"
 import { useGridContext } from "../hooks/useGridContext"
@@ -26,10 +26,12 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const invFontWidth = 1 / grid.fontWidth
 	const invFontHeight = 1 / grid.fontHeight
 
-	const leftCol = Math.floor(rect.rect.left * invFontWidth)
-	const rightCol = Math.floor(rect.rect.right * invFontWidth)
-	const topRow = Math.floor(rect.rect.top * invFontHeight)
-	const bottomRow = Math.floor(rect.rect.bottom * invFontHeight)
+	const trim = 0.001
+
+	const leftCol = Math.floor(rect.rect.left * invFontWidth + trim)
+	const rightCol = Math.floor(rect.rect.right * invFontWidth + trim)
+	const topRow = Math.floor(rect.rect.top * invFontHeight + trim)
+	const bottomRow = Math.floor(rect.rect.bottom * invFontHeight + trim)
 
 	const cl = rect.classList
 
@@ -74,6 +76,10 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.b:
 				case grid.options.tr:
 				case grid.options.br:
+				case grid.options.i:
+				case grid.options.ri:
+				case grid.options.ti:
+				case grid.options.bi:
 					grid.grid[l] = liChar
 					break
 				default:
@@ -91,6 +97,10 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.b:
 				case grid.options.tl:
 				case grid.options.bl:
+				case grid.options.i:
+				case grid.options.ri:
+				case grid.options.ti:
+				case grid.options.bi:
 					grid.grid[r] = riChar
 					break
 				default:
@@ -110,6 +120,10 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.r:
 				case grid.options.bl:
 				case grid.options.br:
+				case grid.options.i:
+				case grid.options.li:
+				case grid.options.ri:
+				case grid.options.ti:
 					grid.grid[t] = tiChar
 					break
 				default:
@@ -126,6 +140,10 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				case grid.options.r:
 				case grid.options.tl:
 				case grid.options.tr:
+				case grid.options.i:
+				case grid.options.li:
+				case grid.options.ri:
+				case grid.options.bi:
 					grid.grid[b] = biChar
 					break
 				default:
@@ -146,14 +164,19 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			case grid.options.t:
 			case grid.options.b:
 			case grid.options.tr:
+			case grid.options.bi:
 				grid.grid[tl] = biChar
 				break
 			case grid.options.l:
 			case grid.options.r:
 			case grid.options.bl:
+			case grid.options.ri:
 				grid.grid[tl] = riChar
 				break
 			case grid.options.br:
+			case grid.options.i:
+			case grid.options.li:
+			case grid.options.ti:
 				grid.grid[tl] = iChar
 				break
 			default:
@@ -171,14 +194,19 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			case grid.options.t:
 			case grid.options.b:
 			case grid.options.tl:
+			case grid.options.bi:
 				grid.grid[tr] = biChar
 				break
 			case grid.options.l:
 			case grid.options.r:
 			case grid.options.br:
+			case grid.options.li:
 				grid.grid[tr] = liChar
 				break
 			case grid.options.bl:
+			case grid.options.i:
+			case grid.options.ri:
+			case grid.options.ti:
 				grid.grid[tr] = iChar
 				break
 			default:
@@ -196,17 +224,22 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			grid.grid[br] = "▼"
 		} else {
 			switch (grid.grid[br]) {
-				case grid.options.l:
-				case grid.options.r:
-				case grid.options.tr:
-					grid.grid[br] = liChar
-					break
 				case grid.options.t:
 				case grid.options.b:
 				case grid.options.bl:
+				case grid.options.ti:
 					grid.grid[br] = tiChar
 					break
+				case grid.options.l:
+				case grid.options.r:
+				case grid.options.tr:
+				case grid.options.li:
+					grid.grid[br] = liChar
+					break
 				case grid.options.tl:
+				case grid.options.i:
+				case grid.options.ri:
+				case grid.options.bi:
 					grid.grid[br] = iChar
 					break
 				default:
@@ -223,17 +256,22 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	) {
 		const bl = getIndex(leftCol, bottomRow, grid)
 		switch (grid.grid[bl]) {
-			case grid.options.l:
-			case grid.options.r:
-			case grid.options.tl:
-				grid.grid[bl] = riChar
-				break
 			case grid.options.t:
 			case grid.options.b:
 			case grid.options.br:
+			case grid.options.ti:
 				grid.grid[bl] = tiChar
 				break
+			case grid.options.l:
+			case grid.options.r:
+			case grid.options.tl:
+			case grid.options.ri:
+				grid.grid[bl] = riChar
+				break
 			case grid.options.tr:
+			case grid.options.i:
+			case grid.options.li:
+			case grid.options.bi:
 				grid.grid[bl] = iChar
 				break
 			default:
@@ -293,20 +331,20 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 	})
 }
 
-export const ASCII = ({
+const ASCIIGrid = ({
 	children,
 	gridReveal = true,
-	revealSpeed = 30,
+	revealDuration = 1000,
 }: {
 	children: React.ReactNode
 	gridReveal?: boolean
-	revealSpeed?: number
+	revealDuration?: number
 }) => {
 	const parentRef = useRef<HTMLDivElement | null>(null)
 	const grid = useGridContext()
 	//const [rects, setRects] = useState<Rect[] | null>([])
 	const rectsRef = useRef<Rect[]>([])
-	const reveal = gridReveal ? useReveal(grid.grid, revealSpeed) : grid.grid
+	const reveal = gridReveal ? useReveal(grid.grid, revealDuration) : grid.grid
 	const [, forceRender] = useReducer((x) => x + 1, 0)
 
 	useLayoutEffect(() => {
@@ -365,4 +403,19 @@ export const ASCII = ({
 			)}
 		</div>
 	)
+}
+
+export const ASCII = (props: React.ComponentProps<typeof ASCIIGrid>) => {
+	const [key, setKey] = useState(0)
+
+	useEffect(() => {
+		const handleResize = () => {
+			setKey((k) => k + 1)
+		}
+
+		window.addEventListener("resize", handleResize)
+		return () => window.removeEventListener("resize", handleResize)
+	}, [])
+
+	return <ASCIIGrid key={key} {...props} />
 }

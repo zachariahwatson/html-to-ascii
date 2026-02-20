@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.5.0] - 2026-02-19
+
+### Added
+
+- More border intersection rules (I think I got them all!)
+
+### Changed
+
+- Reveal grid based on duration, not cells per frame
+
+### Fixed
+
+- More grid inaccuracy when dragging or moving elements
+- Fully refresh grid on window resize
+
 ## [0.4.1] - 2026-02-13
 
 ### Fixed
@@ -102,6 +117,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII box customization
 - Basic position change monitoring
 
+[0.5.0]: https://github.com/zachariahwatson/html-to-ascii/compare/0.4.1...0.5.0
 [0.4.1]: https://github.com/zachariahwatson/html-to-ascii/compare/0.4.0...0.4.1
 [0.4.0]: https://github.com/zachariahwatson/html-to-ascii/compare/0.3.2...0.4.0
 [0.3.2]: https://github.com/zachariahwatson/html-to-ascii/compare/0.3.1...0.3.2
