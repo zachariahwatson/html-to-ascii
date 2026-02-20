@@ -342,8 +342,8 @@ export const ASCII = ({
 		<div ref={parentRef} className="leading-none">
 			<div
 				style={{ width: grid.truncWidth, height: grid.truncHeight }}
-				className="absolute top-0 left-0 bg-none pointer-events-none"
-				//className="absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none"
+				//className="absolute top-0 left-0 bg-none pointer-events-none"
+				className="absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none"
 			>
 				{children}
 			</div>
@@ -367,4 +367,19 @@ export const ASCII = ({
 			)}
 		</div>
 	)
+}
+
+export const ASCII = (props: React.ComponentProps<typeof ASCIIGrid>) => {
+	const [key, setKey] = useState(0)
+
+	useEffect(() => {
+		const handleResize = () => {
+			setKey((k) => k + 1)
+		}
+
+		window.addEventListener("resize", handleResize)
+		return () => window.removeEventListener("resize", handleResize)
+	}, [])
+
+	return <ASCIIGrid key={key} {...props} />
 }
