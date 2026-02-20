@@ -1,23 +1,35 @@
 import { useEffect, useState } from "react"
 
-export function useReveal(grid: string[], speed = 1) {
+export function useReveal(grid: string[], duration = 1000) {
 	const [index, setIndex] = useState(0)
+
 	useEffect(() => {
-		let frame: number
-
-		const loop = () => {
-			setIndex((i) => {
-				if (i >= grid.length) return i
-				return i + speed
-			})
-
-			frame = requestAnimationFrame(loop)
+		if (duration <= 0 || grid.length === 0) {
+			setIndex(grid.length)
+			return
 		}
 
-		loop()
+		let frame: number
+		const start = performance.now()
+
+		const loop = (now: number) => {
+			const progress = (now - start) / duration
+			const nextIndex = Math.floor(progress * grid.length)
+
+			setIndex((prev) => {
+				if (prev === nextIndex) return prev
+				return nextIndex
+			})
+
+			if (progress < 1) {
+				frame = requestAnimationFrame(loop)
+			}
+		}
+
+		frame = requestAnimationFrame(loop)
 
 		return () => cancelAnimationFrame(frame)
-	}, [grid, speed])
+	}, [grid, duration])
 
-	return grid.slice(0, index)
+	return index >= grid.length ? grid : grid.slice(0, index)
 }
