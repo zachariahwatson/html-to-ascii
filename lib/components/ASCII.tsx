@@ -1,4 +1,4 @@
-import { useLayoutEffect, useReducer, useRef } from "react"
+import { useEffect, useLayoutEffect, useReducer, useRef, useState } from "react"
 import type { GridData } from "../types/GridData"
 import type { Rect } from "../types/Rect"
 import { useGridContext } from "../hooks/useGridContext"
@@ -295,20 +295,20 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 	})
 }
 
-export const ASCII = ({
+const ASCIIGrid = ({
 	children,
 	gridReveal = true,
-	revealSpeed = 30,
+	revealDuration = 1000,
 }: {
 	children: React.ReactNode
 	gridReveal?: boolean
-	revealSpeed?: number
+	revealDuration?: number
 }) => {
 	const parentRef = useRef<HTMLDivElement | null>(null)
 	const grid = useGridContext()
 	//const [rects, setRects] = useState<Rect[] | null>([])
 	const rectsRef = useRef<Rect[]>([])
-	const reveal = gridReveal ? useReveal(grid.grid, revealSpeed) : grid.grid
+	const reveal = gridReveal ? useReveal(grid.grid, revealDuration) : grid.grid
 	const [, forceRender] = useReducer((x) => x + 1, 0)
 
 	useLayoutEffect(() => {
