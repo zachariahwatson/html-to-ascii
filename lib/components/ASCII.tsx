@@ -293,7 +293,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		rect.characters.forEach((c) => {
 			const col = Math.floor(c.rect.left * invFontWidth)
 			const row = Math.floor(c.rect.bottom * invFontHeight)
-			grid.grid[getIndex(col, row, grid)] = c.char
+			grid.grid[getIndex(col, row, grid)] = rect.type === "a" ? c.char + "\u0332" : c.char
 		})
 	}
 }
