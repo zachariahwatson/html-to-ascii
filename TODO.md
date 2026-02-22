@@ -7,4 +7,5 @@
 - [ ] Add underline to links
 - [ ] Add `<ul>` and `<ol>` bullet points and numbers
 - [ ] Add section about grid reveal to README.md
+- [ ] Add section about shadows to README.md
 - [ ] Add demo page
