@@ -6,7 +6,12 @@ import type { GridData } from "../types/GridData"
 import type { GridOptions } from "../types/GridOptions"
 import { defaultOptions } from "../utils/defaultOptions"
 
-function initGrid({ width, height, ...options }: { width: number; height: number } & Partial<GridOptions>): GridData {
+function initGrid({
+	width,
+	height,
+	fontHeight = 16,
+	...options
+}: { width: number; height: number; fontHeight?: number } & Partial<GridOptions>): GridData {
 	const mergedOptions: GridOptions = {
 		...defaultOptions,
 		...options,
