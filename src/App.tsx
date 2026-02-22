@@ -20,7 +20,7 @@ function App() {
   |  $$$$/|  $$$$$$$
    \___/   \_______/          
 					`}
-				<a href="https://en.wikipedia.org/wiki/Block_Elements" className="ascii-text underline">
+				<a href="https://en.wikipedia.org/wiki/Block_Elements" className="ascii-text">
 					a link
 				</a>
 				{/* <div className="m-4 ascii-border-tl ascii-border-br h-8" />
@@ -34,7 +34,7 @@ function App() {
 			<Draggable nodeRef={nodeRef} grid={[grid.fontWidth, grid.fontHeight]}>
 				<div
 					ref={nodeRef}
-					className="w-[599px] h-71 border ascii-border ascii-text whitespace-pre pointer-events-auto cursor-grab"
+					className="w-[599px] h-71 border ascii-border ascii-text whitespace-pre pointer-events-auto cursor-grab ascii-shadow-bl"
 				>
 					{String.raw`
    /$$

@@ -49,6 +49,14 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const hasBL = cl.contains("ascii-border-bl")
 	const hasNoFill = cl.contains("ascii-no-fill")
 	const hasText = cl.contains("ascii-text")
+	const hasShadowTL = cl.contains("ascii-shadow-tl")
+	const hasShadowTR = cl.contains("ascii-shadow-tr")
+	const hasShadowBR = cl.contains("ascii-shadow-br")
+	const hasShadowBL = cl.contains("ascii-shadow-bl")
+	const hasShadowL = cl.contains("ascii-shadow-l")
+	const hasShadowR = cl.contains("ascii-shadow-r")
+	const hasShadowT = cl.contains("ascii-shadow-t")
+	const hasShadowB = cl.contains("ascii-shadow-b")
 
 	const lChar = getCharOverride(cl, "l", grid.options.l)
 	const rChar = getCharOverride(cl, "r", grid.options.r)
@@ -64,6 +72,14 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const tiChar = getCharOverride(cl, "ti", grid.options.ti)
 	const biChar = getCharOverride(cl, "bi", grid.options.bi)
 	const iChar = getCharOverride(cl, "i", grid.options.i)
+	const shadowLChar = getCharOverride(cl, "sl", grid.options.sl)
+	const shadowRChar = getCharOverride(cl, "sl", grid.options.sr)
+	const shadowTChar = getCharOverride(cl, "sl", grid.options.st)
+	const shadowBChar = getCharOverride(cl, "sl", grid.options.sb)
+	const shadowTLChar = getCharOverride(cl, "sl", grid.options.stl)
+	const shadowTRChar = getCharOverride(cl, "sl", grid.options.str)
+	const shadowBRChar = getCharOverride(cl, "sl", grid.options.sbr)
+	const shadowBLChar = getCharOverride(cl, "sl", grid.options.sbl)
 
 	let leftOverflow = leftCol < 0 || leftCol > maxCols
 	let rightOverflow = rightCol < 0 || rightCol > maxCols
@@ -99,6 +115,47 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 		}
 	}
+	//top shadows
+	if (hasShadowT) {
+		for (let col = leftCol; col < rightCol + 1; col++) {
+			if (col < 0) {
+				continue
+			}
+			if (col > maxCols) {
+				break
+			}
+
+			const b = getIndex(col, topRow - 1, grid)
+			grid.grid[b] = shadowTChar
+		}
+	}
+	if (hasShadowTL) {
+		for (let col = leftCol - 1; col < rightCol; col++) {
+			if (col < 0) {
+				continue
+			}
+			if (col > maxCols) {
+				break
+			}
+
+			const b = getIndex(col, topRow - 1, grid)
+			grid.grid[b] = shadowTLChar
+		}
+	}
+	if (hasShadowTR) {
+		for (let col = leftCol + 1; col < rightCol + 2; col++) {
+			if (col < 0) {
+				continue
+			}
+			if (col > maxCols) {
+				break
+			}
+
+			const b = getIndex(col, topRow - 1, grid)
+			grid.grid[b] = shadowTRChar
+		}
+	}
+
 	//bottom
 	if (hasB || ((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasTL && !hasTR && !hasBR && !hasBL)) {
 		for (let col = leftCol + 1; col < rightCol; col++) {
@@ -126,53 +183,130 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 		}
 	}
+	//bottom shadows
+	if (hasShadowB) {
+		for (let col = leftCol; col < rightCol + 1; col++) {
+			if (col < 0) {
+				continue
+			}
+			if (col > maxCols) {
+				break
+			}
+
+			const b = getIndex(col, bottomRow + 1, grid)
+			grid.grid[b] = shadowBChar
+		}
+	}
+	if (hasShadowBL) {
+		for (let col = leftCol - 1; col < rightCol; col++) {
+			if (col < 0) {
+				continue
+			}
+			if (col > maxCols) {
+				break
+			}
+
+			const b = getIndex(col, bottomRow + 1, grid)
+			grid.grid[b] = shadowBLChar
+		}
+	}
+	if (hasShadowBR) {
+		for (let col = leftCol + 1; col < rightCol + 2; col++) {
+			if (col < 0) {
+				continue
+			}
+			if (col > maxCols) {
+				break
+			}
+
+			const b = getIndex(col, bottomRow + 1, grid)
+			grid.grid[b] = shadowBRChar
+		}
+	}
 
 	//verticals
 	//left
-	if (
-		!leftOverflow &&
-		(hasL || ((hasASCII || hasBorder) && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL))
-	) {
-		for (let row = topRow + 1; row < bottomRow; row++) {
-			const l = getIndex(leftCol, row, grid)
+	if (!leftOverflow) {
+		if (hasL || ((hasASCII || hasBorder) && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
+			for (let row = topRow + 1; row < bottomRow; row++) {
+				const l = getIndex(leftCol, row, grid)
 
-			switch (grid.grid[l]) {
-				case grid.options.t:
-				case grid.options.b:
-				case grid.options.tr:
-				case grid.options.br:
-				case grid.options.i:
-				case grid.options.ri:
-				case grid.options.ti:
-				case grid.options.bi:
-					grid.grid[l] = liChar
-					break
-				default:
-					grid.grid[l] = lChar
+				switch (grid.grid[l]) {
+					case grid.options.t:
+					case grid.options.b:
+					case grid.options.tr:
+					case grid.options.br:
+					case grid.options.i:
+					case grid.options.ri:
+					case grid.options.ti:
+					case grid.options.bi:
+						grid.grid[l] = liChar
+						break
+					default:
+						grid.grid[l] = lChar
+				}
+			}
+		}
+		//left shadows
+		if (hasShadowL) {
+			for (let row = topRow + 1; row < bottomRow + 1; row++) {
+				const l = getIndex(leftCol - 1, row, grid)
+				grid.grid[l] = shadowLChar
+			}
+		}
+		if (hasShadowTL) {
+			for (let row = topRow - 1; row < bottomRow; row++) {
+				const l = getIndex(leftCol - 1, row, grid)
+				grid.grid[l] = shadowTLChar
+			}
+		}
+		if (hasShadowBL) {
+			for (let row = topRow + 1; row < bottomRow + 2; row++) {
+				const l = getIndex(leftCol - 1, row, grid)
+				grid.grid[l] = shadowBLChar
 			}
 		}
 	}
-	//right
-	if (
-		!rightOverflow &&
-		(hasR || ((hasASCII || hasBorder) && !hasL && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL))
-	) {
-		for (let row = topRow + 1; row < bottomRow; row++) {
-			const r = getIndex(rightCol, row, grid)
 
-			switch (grid.grid[r]) {
-				case grid.options.t:
-				case grid.options.b:
-				case grid.options.tl:
-				case grid.options.bl:
-				case grid.options.i:
-				case grid.options.ri:
-				case grid.options.ti:
-				case grid.options.bi:
-					grid.grid[r] = riChar
-					break
-				default:
-					grid.grid[r] = rChar
+	//right
+	if (!rightOverflow) {
+		if (hasR || ((hasASCII || hasBorder) && !hasL && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
+			for (let row = topRow + 1; row < bottomRow; row++) {
+				const r = getIndex(rightCol, row, grid)
+
+				switch (grid.grid[r]) {
+					case grid.options.t:
+					case grid.options.b:
+					case grid.options.tl:
+					case grid.options.bl:
+					case grid.options.i:
+					case grid.options.ri:
+					case grid.options.ti:
+					case grid.options.bi:
+						grid.grid[r] = riChar
+						break
+					default:
+						grid.grid[r] = rChar
+				}
+			}
+		}
+		//right shadows
+		if (hasShadowR) {
+			for (let row = topRow + 1; row < bottomRow + 1; row++) {
+				const l = getIndex(rightCol - 1, row, grid)
+				grid.grid[l] = shadowRChar
+			}
+		}
+		if (hasShadowTR) {
+			for (let row = topRow - 1; row < bottomRow; row++) {
+				const l = getIndex(rightCol - 1, row, grid)
+				grid.grid[l] = shadowTRChar
+			}
+		}
+		if (hasShadowBR) {
+			for (let row = topRow + 1; row < bottomRow + 2; row++) {
+				const l = getIndex(rightCol - 1, row, grid)
+				grid.grid[l] = shadowBRChar
 			}
 		}
 	}
@@ -411,8 +545,8 @@ const ASCIIGrid = ({
 		<div ref={parentRef} className="leading-none">
 			<div
 				style={{ width: grid.truncWidth, height: grid.truncHeight }}
-				className="absolute top-0 left-0 bg-none pointer-events-none overflow-hidden"
-				//className="absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none"
+				//className="absolute top-0 left-0 bg-none pointer-events-none overflow-hidden"
+				className="absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none overflow-hidden"
 			>
 				{children}
 			</div>
