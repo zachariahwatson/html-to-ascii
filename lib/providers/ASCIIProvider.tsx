@@ -12,8 +12,8 @@ function initGrid({ width, height, ...options }: { width: number; height: number
 		...options,
 	}
 	const fontHeight = 16
-	const courierRatio = 1229 / 2048
-	const fontWidth = fontHeight * courierRatio
+	const fontRatio = 1229 / 2048
+	const fontWidth = fontHeight * fontRatio
 	const truncWidth = width - (width % fontWidth)
 	const truncHeight = height - (height % fontHeight)
 	const rows = Math.floor(truncHeight / fontHeight)
@@ -21,7 +21,7 @@ function initGrid({ width, height, ...options }: { width: number; height: number
 	const grid = Array.from({ length: rows * cols }, () => mergedOptions.fill)
 	return {
 		fontHeight,
-		courierRatio,
+		fontRatio,
 		fontWidth,
 		truncWidth,
 		truncHeight,
