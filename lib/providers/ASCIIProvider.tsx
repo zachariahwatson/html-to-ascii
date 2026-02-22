@@ -6,14 +6,18 @@ import type { GridData } from "../types/GridData"
 import type { GridOptions } from "../types/GridOptions"
 import { defaultOptions } from "../utils/defaultOptions"
 
-function initGrid({ width, height, ...options }: { width: number; height: number } & Partial<GridOptions>): GridData {
+function initGrid({
+	width,
+	height,
+	fontHeight = 16,
+	...options
+}: { width: number; height: number; fontHeight?: number } & Partial<GridOptions>): GridData {
 	const mergedOptions: GridOptions = {
 		...defaultOptions,
 		...options,
 	}
-	const fontHeight = 16
-	const courierRatio = 1229 / 2048
-	const fontWidth = fontHeight * courierRatio
+	const fontRatio = 1202 / 2048 // 1200 is the width of Cascadia Mono (but I have no clue why 1202 is the closest number that works)
+	const fontWidth = fontHeight * fontRatio
 	const truncWidth = width - (width % fontWidth)
 	const truncHeight = height - (height % fontHeight)
 	const rows = Math.floor(truncHeight / fontHeight)
@@ -21,7 +25,7 @@ function initGrid({ width, height, ...options }: { width: number; height: number
 	const grid = Array.from({ length: rows * cols }, () => mergedOptions.fill)
 	return {
 		fontHeight,
-		courierRatio,
+		fontRatio,
 		fontWidth,
 		truncWidth,
 		truncHeight,

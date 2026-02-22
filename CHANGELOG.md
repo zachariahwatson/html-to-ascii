@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.6.0] - 2026-02-22
+
+### Added
+
+- Basic shadows
+- Unicode underlines on `<a>` link text
+- 'v' prefix to versions
+
+### Changed
+
+- Font to Cascadia Mono (for better unicode underline compatibility)
+
 ## [0.5.0] - 2026-02-19
 
 ### Added
@@ -117,6 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII box customization
 - Basic position change monitoring
 
+[0.6.0]: https://github.com/zachariahwatson/html-to-ascii/compare/0.5.0...v0.6.0
 [0.5.0]: https://github.com/zachariahwatson/html-to-ascii/compare/0.4.1...0.5.0
 [0.4.1]: https://github.com/zachariahwatson/html-to-ascii/compare/0.4.0...0.4.1
 [0.4.0]: https://github.com/zachariahwatson/html-to-ascii/compare/0.3.2...0.4.0
