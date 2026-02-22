@@ -16,8 +16,7 @@ function initGrid({
 		...defaultOptions,
 		...options,
 	}
-	const fontHeight = 16
-	const fontRatio = 1229 / 2048
+	const fontRatio = 1202 / 2048 // 1200 is the width of Cascadia Mono (but I have no clue why 1202 is the closest number that works)
 	const fontWidth = fontHeight * fontRatio
 	const truncWidth = width - (width % fontWidth)
 	const truncHeight = height - (height % fontHeight)
