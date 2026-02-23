@@ -494,7 +494,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			const col = Math.floor(c.rect.left * invFontWidth)
 			const row = Math.floor(c.rect.bottom * invFontHeight)
 			if (!(col < 0 || col > maxCols)) {
-				grid.grid[getIndex(col, row, grid)] = rect.type === "a" ? c.char + "\u{332}" : c.char
+				if (rect.type === "a" && "abcdefhiklmnorstuvwxyz".includes(c.char)) {
+					grid.grid[getIndex(col, row, grid)] = c.char + "\u{332}"
+				} else {
+					grid.grid[getIndex(col, row, grid)] = c.char
+				}
 			}
 		})
 	}
