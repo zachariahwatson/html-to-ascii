@@ -76,10 +76,6 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const shadowRChar = getCharOverride(cl, "sl", grid.options.sr)
 	const shadowTChar = getCharOverride(cl, "sl", grid.options.st)
 	const shadowBChar = getCharOverride(cl, "sl", grid.options.sb)
-	const shadowTLChar = getCharOverride(cl, "sl", grid.options.stl)
-	const shadowTRChar = getCharOverride(cl, "sl", grid.options.str)
-	const shadowBRChar = getCharOverride(cl, "sl", grid.options.sbr)
-	const shadowBLChar = getCharOverride(cl, "sl", grid.options.sbl)
 
 	let leftOverflow = leftCol < 0 || leftCol > maxCols
 	let rightOverflow = rightCol < 0 || rightCol > maxCols
@@ -98,6 +94,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const t = getIndex(col, topRow, grid)
+
+			if (hasShadowT || hasShadowTL || hasShadowTR) {
+				grid.grid[t] = tChar
+				continue
+			}
 
 			switch (grid.grid[t]) {
 				case grid.options.l:
@@ -139,7 +140,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const b = getIndex(col, topRow - 1, grid)
-			grid.grid[b] = shadowTLChar
+			grid.grid[b] = shadowTChar
 		}
 	}
 	if (hasShadowTR) {
@@ -152,7 +153,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const b = getIndex(col, topRow - 1, grid)
-			grid.grid[b] = shadowTRChar
+			grid.grid[b] = shadowTChar
 		}
 	}
 
@@ -167,6 +168,12 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const b = getIndex(col, bottomRow, grid)
+
+			if (hasShadowB || hasShadowBL || hasShadowBR) {
+				grid.grid[b] = bChar
+				continue
+			}
+
 			switch (grid.grid[b]) {
 				case grid.options.l:
 				case grid.options.r:
@@ -207,7 +214,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const b = getIndex(col, bottomRow + 1, grid)
-			grid.grid[b] = shadowBLChar
+			grid.grid[b] = shadowBChar
 		}
 	}
 	if (hasShadowBR) {
@@ -220,7 +227,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const b = getIndex(col, bottomRow + 1, grid)
-			grid.grid[b] = shadowBRChar
+			grid.grid[b] = shadowBChar
 		}
 	}
 
@@ -230,6 +237,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		if (hasL || ((hasASCII || hasBorder) && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
 			for (let row = topRow + 1; row < bottomRow; row++) {
 				const l = getIndex(leftCol, row, grid)
+
+				if (hasShadowL || hasShadowTL || hasShadowBL) {
+					grid.grid[l] = lChar
+					continue
+				}
 
 				switch (grid.grid[l]) {
 					case grid.options.t:
@@ -257,13 +269,13 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		if (hasShadowTL) {
 			for (let row = topRow - 1; row < bottomRow; row++) {
 				const l = getIndex(leftCol - 1, row, grid)
-				grid.grid[l] = shadowTLChar
+				grid.grid[l] = shadowLChar
 			}
 		}
 		if (hasShadowBL) {
 			for (let row = topRow + 1; row < bottomRow + 2; row++) {
 				const l = getIndex(leftCol - 1, row, grid)
-				grid.grid[l] = shadowBLChar
+				grid.grid[l] = shadowLChar
 			}
 		}
 	}
@@ -273,6 +285,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		if (hasR || ((hasASCII || hasBorder) && !hasL && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
 			for (let row = topRow + 1; row < bottomRow; row++) {
 				const r = getIndex(rightCol, row, grid)
+
+				if (hasShadowR || hasShadowTR || hasShadowBR) {
+					grid.grid[r] = rChar
+					continue
+				}
 
 				switch (grid.grid[r]) {
 					case grid.options.t:
@@ -300,13 +317,13 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		if (hasShadowTR) {
 			for (let row = topRow - 1; row < bottomRow; row++) {
 				const l = getIndex(rightCol - 1, row, grid)
-				grid.grid[l] = shadowTRChar
+				grid.grid[l] = shadowRChar
 			}
 		}
 		if (hasShadowBR) {
 			for (let row = topRow + 1; row < bottomRow + 2; row++) {
 				const l = getIndex(rightCol - 1, row, grid)
-				grid.grid[l] = shadowBRChar
+				grid.grid[l] = shadowRChar
 			}
 		}
 	}
@@ -320,27 +337,32 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTR && !hasBR && !hasBL))
 	) {
 		const tl = getIndex(leftCol, topRow, grid)
-		switch (grid.grid[tl]) {
-			case grid.options.t:
-			case grid.options.b:
-			case grid.options.tr:
-			case grid.options.bi:
-				grid.grid[tl] = biChar
-				break
-			case grid.options.l:
-			case grid.options.r:
-			case grid.options.bl:
-			case grid.options.ri:
-				grid.grid[tl] = riChar
-				break
-			case grid.options.br:
-			case grid.options.i:
-			case grid.options.li:
-			case grid.options.ti:
-				grid.grid[tl] = iChar
-				break
-			default:
-				grid.grid[tl] = tlChar
+
+		if (hasShadowTL) {
+			grid.grid[tl] = tlChar
+		} else {
+			switch (grid.grid[tl]) {
+				case grid.options.t:
+				case grid.options.b:
+				case grid.options.tr:
+				case grid.options.bi:
+					grid.grid[tl] = biChar
+					break
+				case grid.options.l:
+				case grid.options.r:
+				case grid.options.bl:
+				case grid.options.ri:
+					grid.grid[tl] = riChar
+					break
+				case grid.options.br:
+				case grid.options.i:
+				case grid.options.li:
+				case grid.options.ti:
+					grid.grid[tl] = iChar
+					break
+				default:
+					grid.grid[tl] = tlChar
+			}
 		}
 	}
 	//tr
@@ -351,27 +373,32 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasBR && !hasBL))
 	) {
 		const tr = getIndex(rightCol, topRow, grid)
-		switch (grid.grid[tr]) {
-			case grid.options.t:
-			case grid.options.b:
-			case grid.options.tl:
-			case grid.options.bi:
-				grid.grid[tr] = biChar
-				break
-			case grid.options.l:
-			case grid.options.r:
-			case grid.options.br:
-			case grid.options.li:
-				grid.grid[tr] = liChar
-				break
-			case grid.options.bl:
-			case grid.options.i:
-			case grid.options.ri:
-			case grid.options.ti:
-				grid.grid[tr] = iChar
-				break
-			default:
-				grid.grid[tr] = trChar
+
+		if (hasShadowTR) {
+			grid.grid[tr] = trChar
+		} else {
+			switch (grid.grid[tr]) {
+				case grid.options.t:
+				case grid.options.b:
+				case grid.options.tl:
+				case grid.options.bi:
+					grid.grid[tr] = biChar
+					break
+				case grid.options.l:
+				case grid.options.r:
+				case grid.options.br:
+				case grid.options.li:
+					grid.grid[tr] = liChar
+					break
+				case grid.options.bl:
+				case grid.options.i:
+				case grid.options.ri:
+				case grid.options.ti:
+					grid.grid[tr] = iChar
+					break
+				default:
+					grid.grid[tr] = trChar
+			}
 		}
 	}
 	//br
@@ -382,8 +409,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBL))
 	) {
 		const br = getIndex(rightCol, bottomRow, grid)
+
 		if (rect.type === "textarea") {
 			grid.grid[br] = "▼"
+		} else if (hasShadowBR) {
+			grid.grid[br] = brChar
 		} else {
 			switch (grid.grid[br]) {
 				case grid.options.t:
@@ -418,27 +448,32 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR))
 	) {
 		const bl = getIndex(leftCol, bottomRow, grid)
-		switch (grid.grid[bl]) {
-			case grid.options.t:
-			case grid.options.b:
-			case grid.options.br:
-			case grid.options.ti:
-				grid.grid[bl] = tiChar
-				break
-			case grid.options.l:
-			case grid.options.r:
-			case grid.options.tl:
-			case grid.options.ri:
-				grid.grid[bl] = riChar
-				break
-			case grid.options.tr:
-			case grid.options.i:
-			case grid.options.li:
-			case grid.options.bi:
-				grid.grid[bl] = iChar
-				break
-			default:
-				grid.grid[bl] = blChar
+
+		if (hasShadowBL) {
+			grid.grid[bl] = blChar
+		} else {
+			switch (grid.grid[bl]) {
+				case grid.options.t:
+				case grid.options.b:
+				case grid.options.br:
+				case grid.options.ti:
+					grid.grid[bl] = tiChar
+					break
+				case grid.options.l:
+				case grid.options.r:
+				case grid.options.tl:
+				case grid.options.ri:
+					grid.grid[bl] = riChar
+					break
+				case grid.options.tr:
+				case grid.options.i:
+				case grid.options.li:
+				case grid.options.bi:
+					grid.grid[bl] = iChar
+					break
+				default:
+					grid.grid[bl] = blChar
+			}
 		}
 	}
 
