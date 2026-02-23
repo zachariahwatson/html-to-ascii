@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.6.1] - 2026-02-23
+
+### Added
+
+- Basic debug that allows you to see the actual DOM under the ASCII grid (you still have to add a border etc. to elements you want to see)
+- More comments
+
+### Changed
+
+- Box intersections won't occur on sides that have a shadow
+- Only underline alphabetic characters in `<a>` tags
+- Use document client window w/h instead of window w/h in `useWindowDimensions()`
+
+### Fixed
+
+- A few shadow positioning mishaps
+
+### Removed
+
+- Redundant shadow options in GridOptions (tl, tr, br, bl)
+
 ## [0.6.0] - 2026-02-22
 
 ### Added
@@ -129,6 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII box customization
 - Basic position change monitoring
 
+[0.6.1]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/zachariahwatson/html-to-ascii/compare/0.5.0...v0.6.0
 [0.5.0]: https://github.com/zachariahwatson/html-to-ascii/compare/0.4.1...0.5.0
 [0.4.1]: https://github.com/zachariahwatson/html-to-ascii/compare/0.4.0...0.4.1
