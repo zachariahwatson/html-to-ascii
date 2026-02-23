@@ -5,10 +5,12 @@ import { useGridContext } from "../hooks/useGridContext"
 import { useReveal } from "../hooks/useReveal"
 import type { GridOptions } from "../types/GridOptions"
 
+/** Gets the index from the specified rows and columns. */
 const getIndex = (col: number, row: number, grid: GridData) => {
 	return row * grid.cols + col
 }
 
+/** Gets the override character from the element's class list. */
 function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: string) {
 	for (const c of cl) {
 		if (c.startsWith(`ascii-${option}-`)) {
@@ -30,6 +32,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 
 	const maxCols = grid.cols - 1
 
+	//get the bounding rows and cols of the element
 	const leftCol = Math.floor(rect.rect.left * invFontWidth + trim)
 	const rightCol = Math.floor(rect.rect.right * invFontWidth + trim)
 	const topRow = Math.floor(rect.rect.top * invFontHeight + trim)
@@ -58,6 +61,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const hasShadowT = cl.contains("ascii-shadow-t")
 	const hasShadowB = cl.contains("ascii-shadow-b")
 
+	//get character overrides if there are any
 	const lChar = getCharOverride(cl, "l", grid.options.l)
 	const rChar = getCharOverride(cl, "r", grid.options.r)
 	const tChar = getCharOverride(cl, "t", grid.options.t)
@@ -77,6 +81,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const shadowTChar = getCharOverride(cl, "sl", grid.options.st)
 	const shadowBChar = getCharOverride(cl, "sl", grid.options.sb)
 
+	//determine if element is partially or fully off-screen
 	let leftOverflow = leftCol < 0 || leftCol > maxCols
 	let rightOverflow = rightCol < 0 || rightCol > maxCols
 
@@ -86,6 +91,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	//top
 	if (hasT || ((hasASCII || hasBorder) && !hasL && !hasR && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
 		for (let col = leftCol + 1; col < rightCol; col++) {
+			//hiding overflow so it doesn't wrap around the other side of the screen
 			if (col < 0) {
 				continue
 			}
@@ -231,7 +237,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		}
 	}
 
-	//verticals
+	//VERTICALS
 	//left
 	if (!leftOverflow) {
 		if (hasL || ((hasASCII || hasBorder) && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
@@ -328,8 +334,8 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		}
 	}
 
-	//corners
-	//tl
+	//CORNERS
+	//top left
 	if (
 		!leftOverflow &&
 		(hasTL ||
@@ -401,7 +407,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 		}
 	}
-	//br
+	//bottom right
 	if (
 		!rightOverflow &&
 		(hasBR ||
@@ -440,7 +446,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		}
 	}
 
-	//bl
+	//bottom left
 	if (
 		!leftOverflow &&
 		(hasBL ||
@@ -507,7 +513,6 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 	if (!ref.current) return []
 	return Array.from(ref.current.querySelectorAll<HTMLElement>('[class*="ascii"]')).map((el) => {
-		//console.log("element", el)
 		const c: { char: string; rect: DOMRect }[] = []
 		const textWalker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT)
 
@@ -523,7 +528,6 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 				range.setEnd(textNode, i + 1)
 
 				const rect = range.getBoundingClientRect()
-				//if (rect.width === 0 || rect.height === 0) continue
 
 				c.push({ char: text[i], rect })
 			}
@@ -548,7 +552,6 @@ const ASCIIGrid = ({
 }) => {
 	const parentRef = useRef<HTMLDivElement | null>(null)
 	const grid = useGridContext()
-	//const [rects, setRects] = useState<Rect[] | null>([])
 	const rectsRef = useRef<Rect[]>([])
 	const reveal = gridReveal ? useReveal(grid.grid, revealDuration) : grid.grid
 	const [, forceRender] = useReducer((x) => x + 1, 0)
@@ -570,8 +573,7 @@ const ASCIIGrid = ({
 		return () => cancelAnimationFrame(frame)
 	}, [])
 
-	// clear canvas
-	// maybe find better way
+	// clear canvas, maybe find better way
 	for (let i = 0; i < grid.grid.length; i++) {
 		grid.grid[i] = String.fromCharCode(160)
 	}
@@ -591,6 +593,7 @@ const ASCIIGrid = ({
 			</div>
 			{parentRef.current && rectsRef.current && (
 				<div style={{ width: grid.truncWidth, height: grid.truncHeight }}>
+					{/* kind of ugly, but is required to get ASCII art to work (come back to this perhaps) - splits the grid string into rows */}
 					{Array.from({ length: grid.rows }, (_, r) => {
 						let str = ""
 						const start = r * grid.cols
@@ -614,6 +617,7 @@ const ASCIIGrid = ({
 export const ASCII = (props: React.ComponentProps<typeof ASCIIGrid>) => {
 	const [key, setKey] = useState(0)
 
+	//trick page to refresh to draw a new grid when window is resized (doesn't work on minimize or maximize; fix)
 	useEffect(() => {
 		const handleResize = () => {
 			setKey((k) => k + 1)
