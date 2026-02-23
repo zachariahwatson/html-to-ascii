@@ -5,10 +5,12 @@ import { useGridContext } from "../hooks/useGridContext"
 import { useReveal } from "../hooks/useReveal"
 import type { GridOptions } from "../types/GridOptions"
 
+/** Gets the index from the specified rows and columns. */
 const getIndex = (col: number, row: number, grid: GridData) => {
 	return row * grid.cols + col
 }
 
+/** Gets the override character from the element's class list. */
 function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: string) {
 	for (const c of cl) {
 		if (c.startsWith(`ascii-${option}-`)) {
@@ -18,18 +20,18 @@ function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: 
 	return fallback
 }
 
+/** Draws the element and handles intersections. */
 const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
-	// const rectLeft = Math.floor(rect.rect.left / grid.fontWidth) * grid.fontWidth
-	// const rectRight = Math.floor(rect.rect.right / grid.fontWidth) * grid.fontWidth
-	// const rectTop = Math.floor(rect.rect.top / grid.fontHeight) * grid.fontHeight
-	// const rectBottom = Math.floor(rect.rect.bottom / grid.fontHeight) * grid.fontHeight
+	// faster than dividing
 	const invFontWidth = 1 / grid.fontWidth
 	const invFontHeight = 1 / grid.fontHeight
 
+	// a trim value is needed so there is no float comparison weirdness
 	const trim = 0.001
 
 	const maxCols = grid.cols - 1
 
+	//get the bounding rows and cols of the element
 	const leftCol = Math.floor(rect.rect.left * invFontWidth + trim)
 	const rightCol = Math.floor(rect.rect.right * invFontWidth + trim)
 	const topRow = Math.floor(rect.rect.top * invFontHeight + trim)
@@ -58,6 +60,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const hasShadowT = cl.contains("ascii-shadow-t")
 	const hasShadowB = cl.contains("ascii-shadow-b")
 
+	//get character overrides if there are any
 	const lChar = getCharOverride(cl, "l", grid.options.l)
 	const rChar = getCharOverride(cl, "r", grid.options.r)
 	const tChar = getCharOverride(cl, "t", grid.options.t)
@@ -76,20 +79,21 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const shadowRChar = getCharOverride(cl, "sl", grid.options.sr)
 	const shadowTChar = getCharOverride(cl, "sl", grid.options.st)
 	const shadowBChar = getCharOverride(cl, "sl", grid.options.sb)
-	const shadowTLChar = getCharOverride(cl, "sl", grid.options.stl)
-	const shadowTRChar = getCharOverride(cl, "sl", grid.options.str)
-	const shadowBRChar = getCharOverride(cl, "sl", grid.options.sbr)
-	const shadowBLChar = getCharOverride(cl, "sl", grid.options.sbl)
 
+	//determine if element is partially or fully off-screen
 	let leftOverflow = leftCol < 0 || leftCol > maxCols
 	let rightOverflow = rightCol < 0 || rightCol > maxCols
 
+	let leftShadowOverflow = leftCol < 1 || leftCol > maxCols
+	let rightShadowOverflow = rightCol < 1 || rightCol > maxCols
+
 	//TODO: associate grid cells with the local options of the dom element - right now the intersections only look for the default characters
 
-	//horizontals
+	//HORIZONTALS
 	//top
 	if (hasT || ((hasASCII || hasBorder) && !hasL && !hasR && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
 		for (let col = leftCol + 1; col < rightCol; col++) {
+			//hiding overflow so it doesn't wrap around the other side of the screen
 			if (col < 0) {
 				continue
 			}
@@ -98,6 +102,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const t = getIndex(col, topRow, grid)
+
+			if (hasShadowT || hasShadowTL || hasShadowTR) {
+				grid.grid[t] = tChar
+				continue
+			}
 
 			switch (grid.grid[t]) {
 				case grid.options.l:
@@ -117,7 +126,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	}
 	//top shadows
 	if (hasShadowT) {
-		for (let col = leftCol; col < rightCol + 1; col++) {
+		for (let col = leftCol + 1; col < rightCol; col++) {
 			if (col < 0) {
 				continue
 			}
@@ -139,7 +148,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const b = getIndex(col, topRow - 1, grid)
-			grid.grid[b] = shadowTLChar
+			grid.grid[b] = shadowTChar
 		}
 	}
 	if (hasShadowTR) {
@@ -152,7 +161,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const b = getIndex(col, topRow - 1, grid)
-			grid.grid[b] = shadowTRChar
+			grid.grid[b] = shadowTChar
 		}
 	}
 
@@ -167,6 +176,12 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const b = getIndex(col, bottomRow, grid)
+
+			if (hasShadowB || hasShadowBL || hasShadowBR) {
+				grid.grid[b] = bChar
+				continue
+			}
+
 			switch (grid.grid[b]) {
 				case grid.options.l:
 				case grid.options.r:
@@ -185,7 +200,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	}
 	//bottom shadows
 	if (hasShadowB) {
-		for (let col = leftCol; col < rightCol + 1; col++) {
+		for (let col = leftCol + 1; col < rightCol; col++) {
 			if (col < 0) {
 				continue
 			}
@@ -207,7 +222,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const b = getIndex(col, bottomRow + 1, grid)
-			grid.grid[b] = shadowBLChar
+			grid.grid[b] = shadowBChar
 		}
 	}
 	if (hasShadowBR) {
@@ -220,16 +235,21 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 
 			const b = getIndex(col, bottomRow + 1, grid)
-			grid.grid[b] = shadowBRChar
+			grid.grid[b] = shadowBChar
 		}
 	}
 
-	//verticals
+	//VERTICALS
 	//left
 	if (!leftOverflow) {
 		if (hasL || ((hasASCII || hasBorder) && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
 			for (let row = topRow + 1; row < bottomRow; row++) {
 				const l = getIndex(leftCol, row, grid)
+
+				if (hasShadowL || hasShadowTL || hasShadowBL) {
+					grid.grid[l] = lChar
+					continue
+				}
 
 				switch (grid.grid[l]) {
 					case grid.options.t:
@@ -247,9 +267,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				}
 			}
 		}
-		//left shadows
+	}
+	//left shadows
+	if (!leftShadowOverflow) {
 		if (hasShadowL) {
-			for (let row = topRow + 1; row < bottomRow + 1; row++) {
+			for (let row = topRow + 1; row < bottomRow; row++) {
 				const l = getIndex(leftCol - 1, row, grid)
 				grid.grid[l] = shadowLChar
 			}
@@ -257,13 +279,13 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		if (hasShadowTL) {
 			for (let row = topRow - 1; row < bottomRow; row++) {
 				const l = getIndex(leftCol - 1, row, grid)
-				grid.grid[l] = shadowTLChar
+				grid.grid[l] = shadowLChar
 			}
 		}
 		if (hasShadowBL) {
 			for (let row = topRow + 1; row < bottomRow + 2; row++) {
 				const l = getIndex(leftCol - 1, row, grid)
-				grid.grid[l] = shadowBLChar
+				grid.grid[l] = shadowLChar
 			}
 		}
 	}
@@ -273,6 +295,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		if (hasR || ((hasASCII || hasBorder) && !hasL && !hasT && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
 			for (let row = topRow + 1; row < bottomRow; row++) {
 				const r = getIndex(rightCol, row, grid)
+
+				if (hasShadowR || hasShadowTR || hasShadowBR) {
+					grid.grid[r] = rChar
+					continue
+				}
 
 				switch (grid.grid[r]) {
 					case grid.options.t:
@@ -290,29 +317,31 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				}
 			}
 		}
-		//right shadows
+	}
+	//right shadows
+	if (!rightShadowOverflow) {
 		if (hasShadowR) {
-			for (let row = topRow + 1; row < bottomRow + 1; row++) {
-				const l = getIndex(rightCol - 1, row, grid)
-				grid.grid[l] = shadowRChar
+			for (let row = topRow + 1; row < bottomRow; row++) {
+				const r = getIndex(rightCol + 1, row, grid)
+				grid.grid[r] = shadowRChar
 			}
 		}
 		if (hasShadowTR) {
 			for (let row = topRow - 1; row < bottomRow; row++) {
-				const l = getIndex(rightCol - 1, row, grid)
-				grid.grid[l] = shadowTRChar
+				const r = getIndex(rightCol + 1, row, grid)
+				grid.grid[r] = shadowRChar
 			}
 		}
 		if (hasShadowBR) {
 			for (let row = topRow + 1; row < bottomRow + 2; row++) {
-				const l = getIndex(rightCol - 1, row, grid)
-				grid.grid[l] = shadowBRChar
+				const r = getIndex(rightCol + 1, row, grid)
+				grid.grid[r] = shadowRChar
 			}
 		}
 	}
 
-	//corners
-	//tl
+	//CORNERS
+	//top left
 	if (
 		!leftOverflow &&
 		(hasTL ||
@@ -320,30 +349,35 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTR && !hasBR && !hasBL))
 	) {
 		const tl = getIndex(leftCol, topRow, grid)
-		switch (grid.grid[tl]) {
-			case grid.options.t:
-			case grid.options.b:
-			case grid.options.tr:
-			case grid.options.bi:
-				grid.grid[tl] = biChar
-				break
-			case grid.options.l:
-			case grid.options.r:
-			case grid.options.bl:
-			case grid.options.ri:
-				grid.grid[tl] = riChar
-				break
-			case grid.options.br:
-			case grid.options.i:
-			case grid.options.li:
-			case grid.options.ti:
-				grid.grid[tl] = iChar
-				break
-			default:
-				grid.grid[tl] = tlChar
+
+		if (hasShadowTL) {
+			grid.grid[tl] = tlChar
+		} else {
+			switch (grid.grid[tl]) {
+				case grid.options.t:
+				case grid.options.b:
+				case grid.options.tr:
+				case grid.options.bi:
+					grid.grid[tl] = biChar
+					break
+				case grid.options.l:
+				case grid.options.r:
+				case grid.options.bl:
+				case grid.options.ri:
+					grid.grid[tl] = riChar
+					break
+				case grid.options.br:
+				case grid.options.i:
+				case grid.options.li:
+				case grid.options.ti:
+					grid.grid[tl] = iChar
+					break
+				default:
+					grid.grid[tl] = tlChar
+			}
 		}
 	}
-	//tr
+	//top right
 	if (
 		!rightOverflow &&
 		(hasTR ||
@@ -351,30 +385,35 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasBR && !hasBL))
 	) {
 		const tr = getIndex(rightCol, topRow, grid)
-		switch (grid.grid[tr]) {
-			case grid.options.t:
-			case grid.options.b:
-			case grid.options.tl:
-			case grid.options.bi:
-				grid.grid[tr] = biChar
-				break
-			case grid.options.l:
-			case grid.options.r:
-			case grid.options.br:
-			case grid.options.li:
-				grid.grid[tr] = liChar
-				break
-			case grid.options.bl:
-			case grid.options.i:
-			case grid.options.ri:
-			case grid.options.ti:
-				grid.grid[tr] = iChar
-				break
-			default:
-				grid.grid[tr] = trChar
+
+		if (hasShadowTR) {
+			grid.grid[tr] = trChar
+		} else {
+			switch (grid.grid[tr]) {
+				case grid.options.t:
+				case grid.options.b:
+				case grid.options.tl:
+				case grid.options.bi:
+					grid.grid[tr] = biChar
+					break
+				case grid.options.l:
+				case grid.options.r:
+				case grid.options.br:
+				case grid.options.li:
+					grid.grid[tr] = liChar
+					break
+				case grid.options.bl:
+				case grid.options.i:
+				case grid.options.ri:
+				case grid.options.ti:
+					grid.grid[tr] = iChar
+					break
+				default:
+					grid.grid[tr] = trChar
+			}
 		}
 	}
-	//br
+	//bottom right
 	if (
 		!rightOverflow &&
 		(hasBR ||
@@ -382,8 +421,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBL))
 	) {
 		const br = getIndex(rightCol, bottomRow, grid)
+
 		if (rect.type === "textarea") {
 			grid.grid[br] = "▼"
+		} else if (hasShadowBR) {
+			grid.grid[br] = brChar
 		} else {
 			switch (grid.grid[br]) {
 				case grid.options.t:
@@ -410,7 +452,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		}
 	}
 
-	//bl
+	//bottom left
 	if (
 		!leftOverflow &&
 		(hasBL ||
@@ -418,27 +460,32 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			((hasASCII || hasBorder) && !hasL && !hasR && !hasT && !hasB && !hasTL && !hasTR && !hasBR))
 	) {
 		const bl = getIndex(leftCol, bottomRow, grid)
-		switch (grid.grid[bl]) {
-			case grid.options.t:
-			case grid.options.b:
-			case grid.options.br:
-			case grid.options.ti:
-				grid.grid[bl] = tiChar
-				break
-			case grid.options.l:
-			case grid.options.r:
-			case grid.options.tl:
-			case grid.options.ri:
-				grid.grid[bl] = riChar
-				break
-			case grid.options.tr:
-			case grid.options.i:
-			case grid.options.li:
-			case grid.options.bi:
-				grid.grid[bl] = iChar
-				break
-			default:
-				grid.grid[bl] = blChar
+
+		if (hasShadowBL) {
+			grid.grid[bl] = blChar
+		} else {
+			switch (grid.grid[bl]) {
+				case grid.options.t:
+				case grid.options.b:
+				case grid.options.br:
+				case grid.options.ti:
+					grid.grid[bl] = tiChar
+					break
+				case grid.options.l:
+				case grid.options.r:
+				case grid.options.tl:
+				case grid.options.ri:
+					grid.grid[bl] = riChar
+					break
+				case grid.options.tr:
+				case grid.options.i:
+				case grid.options.li:
+				case grid.options.bi:
+					grid.grid[bl] = iChar
+					break
+				default:
+					grid.grid[bl] = blChar
+			}
 		}
 	}
 
@@ -459,16 +506,20 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			const col = Math.floor(c.rect.left * invFontWidth)
 			const row = Math.floor(c.rect.bottom * invFontHeight)
 			if (!(col < 0 || col > maxCols)) {
-				grid.grid[getIndex(col, row, grid)] = rect.type === "a" ? c.char + "\u{332}" : c.char
+				if (rect.type === "a" && "abcdefhiklmnorstuvwxyz".includes(c.char)) {
+					grid.grid[getIndex(col, row, grid)] = c.char + "\u{332}"
+				} else {
+					grid.grid[getIndex(col, row, grid)] = c.char
+				}
 			}
 		})
 	}
 }
 
+/** Returns elements (along with their text) that have any class that starts with "ascii". */
 function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 	if (!ref.current) return []
 	return Array.from(ref.current.querySelectorAll<HTMLElement>('[class*="ascii"]')).map((el) => {
-		//console.log("element", el)
 		const c: { char: string; rect: DOMRect }[] = []
 		const textWalker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT)
 
@@ -477,14 +528,14 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 			const text = textNode.textContent ?? ""
 
 			for (let i = 0; i < text.length; i++) {
+				//skip whitespace (messes up grid)
 				if (text[i].trim() === "") continue
-				//console.log(text[i])
+
 				const range = document.createRange()
 				range.setStart(textNode, i)
 				range.setEnd(textNode, i + 1)
 
 				const rect = range.getBoundingClientRect()
-				//if (rect.width === 0 || rect.height === 0) continue
 
 				c.push({ char: text[i], rect })
 			}
@@ -509,11 +560,11 @@ const ASCIIGrid = ({
 }) => {
 	const parentRef = useRef<HTMLDivElement | null>(null)
 	const grid = useGridContext()
-	//const [rects, setRects] = useState<Rect[] | null>([])
 	const rectsRef = useRef<Rect[]>([])
 	const reveal = gridReveal ? useReveal(grid.grid, revealDuration) : grid.grid
 	const [, forceRender] = useReducer((x) => x + 1, 0)
 
+	//poll for changes in the DOM
 	useLayoutEffect(() => {
 		if (!parentRef.current) return
 
@@ -531,8 +582,7 @@ const ASCIIGrid = ({
 		return () => cancelAnimationFrame(frame)
 	}, [])
 
-	// clear canvas
-	// maybe find better way
+	// clear canvas, maybe find better way
 	for (let i = 0; i < grid.grid.length; i++) {
 		grid.grid[i] = String.fromCharCode(160)
 	}
@@ -545,13 +595,18 @@ const ASCIIGrid = ({
 		<div ref={parentRef} className="leading-none">
 			<div
 				style={{ width: grid.truncWidth, height: grid.truncHeight }}
-				//className="absolute top-0 left-0 bg-none pointer-events-none overflow-hidden"
-				className="absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none overflow-hidden"
+				//show actual DOM elements if debug is on
+				className={
+					grid.options.debug
+						? "absolute top-0 left-0 bg-none pointer-events-none overflow-hidden"
+						: "absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none overflow-hidden"
+				}
 			>
 				{children}
 			</div>
 			{parentRef.current && rectsRef.current && (
 				<div style={{ width: grid.truncWidth, height: grid.truncHeight }}>
+					{/* kind of ugly, but is required to get ASCII art to work (come back to this perhaps) - splits the grid string into rows */}
 					{Array.from({ length: grid.rows }, (_, r) => {
 						let str = ""
 						const start = r * grid.cols
@@ -564,9 +619,6 @@ const ASCIIGrid = ({
 						return <p key={r}>{str}</p>
 					})}
 				</div>
-				// <div style={{ width: grid.truncWidth, height: grid.truncHeight }} className="leading-none wrap-break-word">
-				// 	{String.raw`${reveal.join("")}`}
-				// </div>
 			)}
 		</div>
 	)
@@ -575,6 +627,7 @@ const ASCIIGrid = ({
 export const ASCII = (props: React.ComponentProps<typeof ASCIIGrid>) => {
 	const [key, setKey] = useState(0)
 
+	//trick page to refresh to draw a new grid when window is resized (doesn't work on minimize or maximize; fix)
 	useEffect(() => {
 		const handleResize = () => {
 			setKey((k) => k + 1)

@@ -17,8 +17,5 @@ export interface GridOptions {
 	sr: string
 	st: string
 	sb: string
-	stl: string
-	str: string
-	sbr: string
-	sbl: string
+	debug: boolean
 }

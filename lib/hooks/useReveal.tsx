@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 
+/** Reveals the grid character by character by a specified duration. */
 export function useReveal(grid: string[], duration = 1000) {
 	const [index, setIndex] = useState(0)
 

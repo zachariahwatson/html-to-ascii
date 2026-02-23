@@ -9,3 +9,4 @@
 - [ ] Add section about grid reveal to README.md
 - [ ] Add section about shadows to README.md
 - [ ] Add demo page
+- [ ] Border patterns
