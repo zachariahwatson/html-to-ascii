@@ -6,7 +6,8 @@ export function useWindowDimensions() {
 		height: 0,
 	})
 	useEffect(() => {
-		const update = () => setDimensions({ width: window.innerWidth, height: window.innerHeight })
+		const update = () =>
+			setDimensions({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight })
 
 		update() // Set initial size
 		window.addEventListener("resize", update)
