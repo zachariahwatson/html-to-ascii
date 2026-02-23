@@ -8,3 +8,4 @@
 - [ ] Add `<ul>` and `<ol>` bullet points and numbers
 - [ ] Add section about grid reveal to README.md
 - [ ] Add demo page
+- [ ] Border patterns
