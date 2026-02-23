@@ -20,14 +20,13 @@ function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: 
 	return fallback
 }
 
+/** Draws the element and handles intersections. */
 const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
-	// const rectLeft = Math.floor(rect.rect.left / grid.fontWidth) * grid.fontWidth
-	// const rectRight = Math.floor(rect.rect.right / grid.fontWidth) * grid.fontWidth
-	// const rectTop = Math.floor(rect.rect.top / grid.fontHeight) * grid.fontHeight
-	// const rectBottom = Math.floor(rect.rect.bottom / grid.fontHeight) * grid.fontHeight
+	// faster than dividing
 	const invFontWidth = 1 / grid.fontWidth
 	const invFontHeight = 1 / grid.fontHeight
 
+	// a trim value is needed so there is no float comparison weirdness
 	const trim = 0.001
 
 	const maxCols = grid.cols - 1
@@ -85,9 +84,12 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	let leftOverflow = leftCol < 0 || leftCol > maxCols
 	let rightOverflow = rightCol < 0 || rightCol > maxCols
 
+	let leftShadowOverflow = leftCol < 1 || leftCol > maxCols
+	let rightShadowOverflow = rightCol < 1 || rightCol > maxCols
+
 	//TODO: associate grid cells with the local options of the dom element - right now the intersections only look for the default characters
 
-	//horizontals
+	//HORIZONTALS
 	//top
 	if (hasT || ((hasASCII || hasBorder) && !hasL && !hasR && !hasB && !hasTL && !hasTR && !hasBR && !hasBL)) {
 		for (let col = leftCol + 1; col < rightCol; col++) {
@@ -124,7 +126,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	}
 	//top shadows
 	if (hasShadowT) {
-		for (let col = leftCol; col < rightCol + 1; col++) {
+		for (let col = leftCol + 1; col < rightCol; col++) {
 			if (col < 0) {
 				continue
 			}
@@ -198,7 +200,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	}
 	//bottom shadows
 	if (hasShadowB) {
-		for (let col = leftCol; col < rightCol + 1; col++) {
+		for (let col = leftCol + 1; col < rightCol; col++) {
 			if (col < 0) {
 				continue
 			}
@@ -265,9 +267,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				}
 			}
 		}
-		//left shadows
+	}
+	//left shadows
+	if (!leftShadowOverflow) {
 		if (hasShadowL) {
-			for (let row = topRow + 1; row < bottomRow + 1; row++) {
+			for (let row = topRow + 1; row < bottomRow; row++) {
 				const l = getIndex(leftCol - 1, row, grid)
 				grid.grid[l] = shadowLChar
 			}
@@ -313,23 +317,25 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				}
 			}
 		}
-		//right shadows
+	}
+	//right shadows
+	if (!rightShadowOverflow) {
 		if (hasShadowR) {
-			for (let row = topRow + 1; row < bottomRow + 1; row++) {
-				const l = getIndex(rightCol - 1, row, grid)
-				grid.grid[l] = shadowRChar
+			for (let row = topRow + 1; row < bottomRow; row++) {
+				const r = getIndex(rightCol + 1, row, grid)
+				grid.grid[r] = shadowRChar
 			}
 		}
 		if (hasShadowTR) {
 			for (let row = topRow - 1; row < bottomRow; row++) {
-				const l = getIndex(rightCol - 1, row, grid)
-				grid.grid[l] = shadowRChar
+				const r = getIndex(rightCol + 1, row, grid)
+				grid.grid[r] = shadowRChar
 			}
 		}
 		if (hasShadowBR) {
 			for (let row = topRow + 1; row < bottomRow + 2; row++) {
-				const l = getIndex(rightCol - 1, row, grid)
-				grid.grid[l] = shadowRChar
+				const r = getIndex(rightCol + 1, row, grid)
+				grid.grid[r] = shadowRChar
 			}
 		}
 	}
@@ -371,7 +377,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 			}
 		}
 	}
-	//tr
+	//top right
 	if (
 		!rightOverflow &&
 		(hasTR ||
@@ -510,6 +516,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	}
 }
 
+/** Returns elements (along with their text) that have any class that starts with "ascii". */
 function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 	if (!ref.current) return []
 	return Array.from(ref.current.querySelectorAll<HTMLElement>('[class*="ascii"]')).map((el) => {
@@ -521,8 +528,9 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 			const text = textNode.textContent ?? ""
 
 			for (let i = 0; i < text.length; i++) {
+				//skip whitespace (messes up grid)
 				if (text[i].trim() === "") continue
-				//console.log(text[i])
+
 				const range = document.createRange()
 				range.setStart(textNode, i)
 				range.setEnd(textNode, i + 1)
@@ -556,6 +564,7 @@ const ASCIIGrid = ({
 	const reveal = gridReveal ? useReveal(grid.grid, revealDuration) : grid.grid
 	const [, forceRender] = useReducer((x) => x + 1, 0)
 
+	//poll for changes in the DOM
 	useLayoutEffect(() => {
 		if (!parentRef.current) return
 
@@ -610,9 +619,6 @@ const ASCIIGrid = ({
 						return <p key={r}>{str}</p>
 					})}
 				</div>
-				// <div style={{ width: grid.truncWidth, height: grid.truncHeight }} className="leading-none wrap-break-word">
-				// 	{String.raw`${reveal.join("")}`}
-				// </div>
 			)}
 		</div>
 	)

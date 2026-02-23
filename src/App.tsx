@@ -61,7 +61,7 @@ function App() {
 			<Draggable nodeRef={nodeRef} grid={[grid.fontWidth, grid.fontHeight]}>
 				<div
 					ref={nodeRef}
-					className="w-[599px] h-71 border ascii-border ascii-text whitespace-pre pointer-events-auto cursor-grab"
+					className="w-[599px] h-71 border ascii-border ascii-text whitespace-pre pointer-events-auto cursor-grab ascii-shadow-bl"
 				>
 					{String.raw`
    /$$
