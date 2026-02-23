@@ -19,4 +19,5 @@ export const defaultOptions: GridOptions = {
 	sr: "█",
 	st: "█",
 	sb: "█",
+	debug: false,
 }
