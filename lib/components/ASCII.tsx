@@ -502,24 +502,11 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 
 	//characters
 	if (hasASCII || hasText) {
-		// rect.characters.forEach((c) => {
-		// 	const col = Math.floor(c.rect.left * invFontWidth + trim)
-		// 	const row = Math.floor(c.rect.bottom * invFontHeight + trim)
-		// 	if (!(col < 0 || col > maxCols)) {
-		// 		if (rect.type === "a" && "abcdefhiklmnorstuvwxyz".includes(c.char)) {
-		// 			grid.grid[getIndex(col, row, grid)] = c.char + "\u{332}"
-		// 		} else {
-		// 			grid.grid[getIndex(col, row, grid)] = c.char
-		// 		}
-		// 	}
-		// })
 		if (rect.characters.length > 0) {
 			let i = 0
 			while (i < rect.characters.length) {
-				// Determine the current row
 				const row = Math.floor(rect.characters[i].rect.bottom * invFontHeight + trim)
 
-				// Determine starting column for this row from the first character
 				const startCol = Math.floor(rect.characters[i].rect.left * invFontWidth + trim)
 
 				let j = 0
@@ -529,7 +516,6 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 
 					if (checkRow !== row) break
 
-					// Column = starting column + offset in row
 					const col = startCol + j
 
 					if (!(col < 0 || col > maxCols)) {
@@ -543,7 +529,6 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 					j++
 				}
 
-				// Move i forward by the number of characters in this row
 				i += j
 			}
 		}
