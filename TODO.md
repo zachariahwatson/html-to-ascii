@@ -10,3 +10,4 @@
 - [ ] Add section about shadows to README.md
 - [ ] Add demo page
 - [ ] Border patterns
+- [ ] Instead of having a fixed grid that's the size of the screen, make the grid the size of the page
