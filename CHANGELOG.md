@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.7.0] - 2026-02-25
+
+### Added
+
+- Support for page scrolling
+
+### Changed
+
+- ASCII grid rows from `<p>`s to `<div>`s to get rid of newlines when selecting and copying the page
+
 ## [0.6.2] - 2026-02-24
 
 ### Changed
