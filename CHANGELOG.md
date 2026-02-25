@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.6.2] - 2026-02-24
+
+### Changed
+
+- Character rendering method - characters are rendered sequentially by index instead of by position
+
+### Removed
+
+- Ability to select the underlying HTML elements
+
 ## [0.6.1] - 2026-02-23
 
 ### Added
@@ -150,6 +160,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII box customization
 - Basic position change monitoring
 
+[0.6.2]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/zachariahwatson/html-to-ascii/compare/0.5.0...v0.6.0
 [0.5.0]: https://github.com/zachariahwatson/html-to-ascii/compare/0.4.1...0.5.0

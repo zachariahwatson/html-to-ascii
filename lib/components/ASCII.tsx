@@ -502,34 +502,57 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 
 	//characters
 	if (hasASCII || hasText) {
-		rect.characters.forEach((c) => {
-			const col = Math.floor(c.rect.left * invFontWidth)
-			const row = Math.floor(c.rect.bottom * invFontHeight)
-			if (!(col < 0 || col > maxCols)) {
-				if (rect.type === "a" && "abcdefhiklmnorstuvwxyz".includes(c.char)) {
-					grid.grid[getIndex(col, row, grid)] = c.char + "\u{332}"
-				} else {
-					grid.grid[getIndex(col, row, grid)] = c.char
+		if (rect.characters.length > 0) {
+			let i = 0
+			while (i < rect.characters.length) {
+				const row = Math.floor(rect.characters[i].rect.bottom * invFontHeight + trim)
+
+				const startCol = Math.floor(rect.characters[i].rect.left * invFontWidth + trim)
+
+				let j = 0
+				while (i + j < rect.characters.length) {
+					const c = rect.characters[i + j]
+					const checkRow = Math.floor(c.rect.bottom * invFontHeight + trim)
+
+					if (checkRow !== row) break
+
+					const col = startCol + j
+
+					if (!(col < 0 || col > maxCols)) {
+						if (rect.type === "a" && "abcdefhiklmnorstuvwxyz".includes(c.char)) {
+							grid.grid[getIndex(col, row, grid)] = c.char + "\u{332}"
+						} else {
+							grid.grid[getIndex(col, row, grid)] = c.char
+						}
+					}
+
+					j++
 				}
+
+				i += j
 			}
-		})
+		}
 	}
 }
 
 /** Returns elements (along with their text) that have any class that starts with "ascii". */
 function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 	if (!ref.current) return []
+
 	return Array.from(ref.current.querySelectorAll<HTMLElement>('[class*="ascii"]')).map((el) => {
 		const c: { char: string; rect: DOMRect }[] = []
-		const textWalker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT)
 
-		while (textWalker.nextNode()) {
-			const textNode = textWalker.currentNode as Text
+		el.childNodes.forEach((node) => {
+			if (node.nodeType !== Node.TEXT_NODE) return
+			const textNode = node as Text
 			const text = textNode.textContent ?? ""
 
 			for (let i = 0; i < text.length; i++) {
-				//skip whitespace (messes up grid)
-				if (text[i].trim() === "") continue
+				let _char = text[i]
+
+				if (_char.trim() === "") _char = String.fromCharCode(160)
+
+				if (_char === "\n") continue
 
 				const range = document.createRange()
 				range.setStart(textNode, i)
@@ -537,9 +560,10 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 
 				const rect = range.getBoundingClientRect()
 
-				c.push({ char: text[i], rect })
+				c.push({ char: _char, rect })
 			}
-		}
+		})
+
 		return {
 			rect: el.getBoundingClientRect(),
 			characters: c,
@@ -573,7 +597,9 @@ const ASCIIGrid = ({
 		const loop = () => {
 			rectsRef.current = getElements(parentRef)
 			frame = requestAnimationFrame(loop)
-
+			if (frame === 1) {
+				console.log(rectsRef.current)
+			}
 			forceRender()
 		}
 
@@ -598,8 +624,8 @@ const ASCIIGrid = ({
 				//show actual DOM elements if debug is on
 				className={
 					grid.options.debug
-						? "absolute top-0 left-0 bg-none pointer-events-none overflow-hidden"
-						: "absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none overflow-hidden"
+						? "absolute top-0 left-0 bg-none pointer-events-none overflow-hidden select-none"
+						: "absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none overflow-hidden select-none"
 				}
 			>
 				{children}
