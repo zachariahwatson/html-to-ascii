@@ -83,7 +83,6 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	//determine if element is partially or fully off-screen
 	let leftOverflow = leftCol < 0 || leftCol > maxCols
 	let rightOverflow = rightCol < 0 || rightCol > maxCols
-
 	let leftShadowOverflow = leftCol < 1 || leftCol > maxCols
 	let rightShadowOverflow = rightCol < 1 || rightCol > maxCols
 
@@ -550,8 +549,8 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 			for (let i = 0; i < text.length; i++) {
 				let _char = text[i]
 
+				//sanitizing whitespace
 				if (_char.trim() === "") _char = String.fromCharCode(160)
-
 				if (_char === "\n") continue
 
 				const range = document.createRange()
