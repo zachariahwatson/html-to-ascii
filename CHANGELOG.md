@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.7.0] - 2026-02-25
+
+### Added
+
+- Support for page scrolling
+
+### Changed
+
+- ASCII grid rows from `<p>`s to `<div>`s to get rid of newlines when selecting and copying the page
+
 ## [0.6.2] - 2026-02-24
 
 ### Changed
@@ -160,6 +170,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII box customization
 - Basic position change monitoring
 
+[0.7.0]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/zachariahwatson/html-to-ascii/compare/0.5.0...v0.6.0
