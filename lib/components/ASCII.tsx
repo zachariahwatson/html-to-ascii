@@ -641,7 +641,7 @@ const ASCIIGrid = ({
 							str += reveal[i] ?? String.fromCharCode(160)
 						}
 
-						return <p key={r}>{str}</p>
+						return <div key={r}>{str}</div>
 					})}
 				</div>
 			)}
