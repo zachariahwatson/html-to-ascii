@@ -39,15 +39,8 @@ function initGrid({
 }
 
 export function ASCIIProvider({ children, ...options }: ASCIIProviderProps) {
-	// const parentGrid = useContext(GridContext)
-
-	// // if a grid already exists, reuse it
-	// if (parentGrid) {
-	// 	return <GridContext.Provider value={parentGrid}>{children}</GridContext.Provider>
-	// }
-
 	const { width, height } = useWindowDimensions()
 	const grid = useMemo(() => initGrid({ width, height, ...options }), [width, height, options])
-	//const grid = initGrid({ width, height, ...options })
+
 	return <GridContext.Provider value={grid}>{children}</GridContext.Provider>
 }

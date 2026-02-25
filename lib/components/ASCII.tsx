@@ -83,7 +83,6 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	//determine if element is partially or fully off-screen
 	let leftOverflow = leftCol < 0 || leftCol > maxCols
 	let rightOverflow = rightCol < 0 || rightCol > maxCols
-
 	let leftShadowOverflow = leftCol < 1 || leftCol > maxCols
 	let rightShadowOverflow = rightCol < 1 || rightCol > maxCols
 
@@ -550,8 +549,8 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 			for (let i = 0; i < text.length; i++) {
 				let _char = text[i]
 
+				//sanitizing whitespace
 				if (_char.trim() === "") _char = String.fromCharCode(160)
-
 				if (_char === "\n") continue
 
 				const range = document.createRange()
@@ -624,14 +623,14 @@ const ASCIIGrid = ({
 				//show actual DOM elements if debug is on
 				className={
 					grid.options.debug
-						? "absolute top-0 left-0 bg-none pointer-events-none overflow-hidden select-none"
-						: "absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none overflow-hidden select-none"
+						? "absolute top-0 left-0 bg-none pointer-events-none overflow-hidden select-none z-10"
+						: "absolute bg-transparent text-transparent border-transparent shadow-none ring-0 top-0 left-0 bg-none pointer-events-none select-none z-10"
 				}
 			>
 				{children}
 			</div>
 			{parentRef.current && rectsRef.current && (
-				<div style={{ width: grid.truncWidth, height: grid.truncHeight }}>
+				<div className="fixed top-0 left-0 z-0" style={{ width: grid.truncWidth, height: grid.truncHeight }}>
 					{/* kind of ugly, but is required to get ASCII art to work (come back to this perhaps) - splits the grid string into rows */}
 					{Array.from({ length: grid.rows }, (_, r) => {
 						let str = ""
@@ -642,7 +641,7 @@ const ASCIIGrid = ({
 							str += reveal[i] ?? String.fromCharCode(160)
 						}
 
-						return <p key={r}>{str}</p>
+						return <div key={r}>{str}</div>
 					})}
 				</div>
 			)}
