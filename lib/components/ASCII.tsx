@@ -511,6 +511,10 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				let j = 0
 				while (i + j < rect.characters.length) {
 					const c = rect.characters[i + j]
+					if (c.char === String.fromCharCode(160)) {
+						j++
+						break
+					}
 					const checkRow = Math.floor(c.rect.bottom * invFontHeight + trim)
 
 					if (checkRow !== row) break
