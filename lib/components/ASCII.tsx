@@ -51,6 +51,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const hasBL = cl.contains("ascii-border-bl")
 	const hasNoFill = cl.contains("ascii-no-fill")
 	const hasText = cl.contains("ascii-text")
+	const hasUnderline = cl.contains("ascii-underline")
 	const hasShadowTL = cl.contains("ascii-shadow-tl")
 	const hasShadowTR = cl.contains("ascii-shadow-tr")
 	const hasShadowBR = cl.contains("ascii-shadow-br")
@@ -522,7 +523,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 					const col = startCol + j
 
 					if (!(col < 0 || col > maxCols)) {
-						if (rect.type === "a" && "abcdefhiklmnorstuvwxyz".includes(c.char)) {
+						if (hasUnderline && "abcdefhiklmnorstuvwxyz".includes(c.char)) {
 							grid.grid[getIndex(col, row, grid)] = c.char + "\u{332}"
 						} else {
 							grid.grid[getIndex(col, row, grid)] = c.char
