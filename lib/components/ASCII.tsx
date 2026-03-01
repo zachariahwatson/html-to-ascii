@@ -22,13 +22,6 @@ function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: 
 
 /** Draws the element and handles intersections. */
 const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
-	// faster than dividing
-	const invFontWidth = 1 / grid.fontWidth
-	const invFontHeight = 1 / grid.fontHeight
-
-	// a trim value is needed so there is no float comparison weirdness
-	const trim = 0.001
-
 	const maxCols = grid.cols - 1
 
 	//get the bounding rows and cols of the element
