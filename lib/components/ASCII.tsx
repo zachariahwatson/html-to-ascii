@@ -506,22 +506,19 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		if (rect.characters.length > 0) {
 			let i = 0
 			while (i < rect.characters.length) {
-				const row = Math.floor(rect.characters[i].rect.bottom * invFontHeight + trim)
-
-				const startCol = Math.floor(rect.characters[i].rect.left * invFontWidth + trim)
+				const rowOffset = Math.round((rect.characters[i].rect.top - rect.rect.top) / grid.fontHeight + trim)
+				const row = topRow + rowOffset
 
 				let j = 0
 				while (i + j < rect.characters.length) {
 					const c = rect.characters[i + j]
-					if (c.char === String.fromCharCode(160)) {
+					if (c.char === String.fromCharCode(160) || c.char === "\n") {
 						j++
 						break
 					}
-					const checkRow = Math.floor(c.rect.bottom * invFontHeight + trim)
 
-					if (checkRow !== row) break
-
-					const col = startCol + j
+					const colOffset = Math.round((c.rect.left - rect.rect.left) / grid.fontWidth + trim)
+					const col = leftCol + colOffset
 
 					if (!(col < 0 || col > maxCols)) {
 						if (hasUnderline && "abcdefhiklmnorstuvwxyz".includes(c.char)) {
@@ -575,7 +572,6 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 
 				//sanitizing whitespace
 				if (_char.trim() === "") _char = String.fromCharCode(160)
-				if (_char === "\n") continue
 
 				const range = document.createRange()
 				range.setStart(textNode, i)
@@ -583,7 +579,10 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 
 				const rect = range.getBoundingClientRect()
 
-				c.push({ char: _char, rect })
+				c.push({
+					char: _char,
+					rect,
+				})
 			}
 		})
 
