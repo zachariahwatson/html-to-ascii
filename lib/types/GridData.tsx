@@ -2,7 +2,6 @@ import type { GridOptions } from "./GridOptions"
 
 export interface GridData {
 	fontHeight: number | 0
-	fontRatio: number
 	fontWidth: number
 	truncWidth: number
 	truncHeight: number

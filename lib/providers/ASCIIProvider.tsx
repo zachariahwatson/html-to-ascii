@@ -6,26 +6,29 @@ import type { GridData } from "../types/GridData"
 import type { GridOptions } from "../types/GridOptions"
 import { defaultOptions } from "../utils/defaultOptions"
 
-function initGrid({
-	width,
-	height,
-	fontHeight = 16,
-	...options
-}: { width: number; height: number; fontHeight?: number } & Partial<GridOptions>): GridData {
+function initGrid({ width, height, ...options }: { width: number; height: number } & Partial<GridOptions>): GridData {
 	const mergedOptions: GridOptions = {
 		...defaultOptions,
 		...options,
 	}
-	const fontRatio = 1202 / 2048 // 1200 is the width of Cascadia Mono (but I have no clue why 1202 is the closest number that works)
-	const fontWidth = fontHeight * fontRatio
+
+	//calculate font dimensions
+	const canvas = document.createElement("canvas")
+	const ctx = canvas.getContext("2d")!
+	ctx.font = `${mergedOptions.fontSize}px ${mergedOptions.font}`
+	const text = "m"
+	const metrics = ctx.measureText(text)
+
+	const fontWidth = metrics.width
+	const fontHeight = metrics.emHeightAscent + metrics.emHeightDescent
 	const truncWidth = width - (width % fontWidth)
 	const truncHeight = height - (height % fontHeight)
 	const rows = Math.floor(truncHeight / fontHeight)
 	const cols = Math.floor(truncWidth / fontWidth)
 	const grid = Array.from({ length: rows * cols }, () => mergedOptions.fill)
+
 	return {
 		fontHeight,
-		fontRatio,
 		fontWidth,
 		truncWidth,
 		truncHeight,

@@ -4,7 +4,6 @@ import { defaultOptions } from "../utils/defaultOptions"
 
 export const GridContext = createContext<GridData>({
 	fontHeight: 0,
-	fontRatio: 0,
 	fontWidth: 0,
 	truncWidth: 0,
 	truncHeight: 0,
