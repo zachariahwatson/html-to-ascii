@@ -1,5 +1,6 @@
 import type { GridOptions } from "./GridOptions"
 
 export type ASCIIProviderProps = React.PropsWithChildren<Partial<GridOptions>> & {
-	fontHeight?: number
+	fontSize?: number
+	font?: string
 }

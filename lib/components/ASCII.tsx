@@ -22,20 +22,21 @@ function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: 
 
 /** Draws the element and handles intersections. */
 const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
-	// faster than dividing
-	const invFontWidth = 1 / grid.fontWidth
-	const invFontHeight = 1 / grid.fontHeight
-
-	// a trim value is needed so there is no float comparison weirdness
-	const trim = 0.001
-
 	const maxCols = grid.cols - 1
 
+	const trim = 1e-6
+
 	//get the bounding rows and cols of the element
-	const leftCol = Math.floor(rect.rect.left * invFontWidth + trim)
-	const rightCol = Math.floor(rect.rect.right * invFontWidth + trim)
-	const topRow = Math.floor(rect.rect.top * invFontHeight + trim)
-	const bottomRow = Math.floor(rect.rect.bottom * invFontHeight + trim)
+	const parentLeft = Math.floor(rect.parentRect.left / grid.fontWidth + trim)
+	const leftOffset = Math.floor((rect.rect.left - rect.parentRect.left) / grid.fontWidth + trim)
+	const leftCol = parentLeft + leftOffset
+	const rightOffset = Math.floor((rect.rect.right - rect.rect.left) / grid.fontWidth + trim)
+	const rightCol = leftCol + rightOffset
+	const parentTop = Math.floor(rect.parentRect.top / grid.fontHeight + trim)
+	const topOffset = Math.floor((rect.rect.top - rect.parentRect.top) / grid.fontHeight + trim)
+	const topRow = parentTop + topOffset
+	const bottomOffset = Math.floor((rect.rect.bottom - rect.rect.top) / grid.fontHeight + trim)
+	const bottomRow = topRow + bottomOffset
 
 	const cl = rect.classList
 
@@ -505,22 +506,19 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		if (rect.characters.length > 0) {
 			let i = 0
 			while (i < rect.characters.length) {
-				const row = Math.floor(rect.characters[i].rect.bottom * invFontHeight + trim)
-
-				const startCol = Math.floor(rect.characters[i].rect.left * invFontWidth + trim)
+				const rowOffset = Math.round((rect.characters[i].rect.top - rect.rect.top) / grid.fontHeight + trim)
+				const row = topRow + rowOffset
 
 				let j = 0
 				while (i + j < rect.characters.length) {
 					const c = rect.characters[i + j]
-					if (c.char === String.fromCharCode(160)) {
+					if (c.char === String.fromCharCode(160) || c.char === "\n") {
 						j++
 						break
 					}
-					const checkRow = Math.floor(c.rect.bottom * invFontHeight + trim)
 
-					if (checkRow !== row) break
-
-					const col = startCol + j
+					const colOffset = Math.round((c.rect.left - rect.rect.left) / grid.fontWidth + trim)
+					const col = leftCol + colOffset
 
 					if (!(col < 0 || col > maxCols)) {
 						if (hasUnderline && "abcdefhiklmnorstuvwxyz".includes(c.char)) {
@@ -543,8 +541,26 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 	if (!ref.current) return []
 
+	const parentRectCache = new Map<HTMLElement, DOMRect>()
+
 	return Array.from(ref.current.querySelectorAll<HTMLElement>('[class*="ascii"]')).map((el) => {
-		const c: { char: string; rect: DOMRect }[] = []
+		const parent = el.closest<HTMLElement>(".ascii-parent")
+
+		if (!parent) {
+			throw new Error("ASCII element must be inside .ascii-parent")
+		}
+
+		let parentRect = parentRectCache.get(parent)
+
+		if (!parentRect) {
+			parentRect = parent.getBoundingClientRect()
+			parentRectCache.set(parent, parentRect)
+		}
+
+		const c: {
+			char: string
+			rect: DOMRect
+		}[] = []
 
 		el.childNodes.forEach((node) => {
 			if (node.nodeType !== Node.TEXT_NODE) return
@@ -556,7 +572,6 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 
 				//sanitizing whitespace
 				if (_char.trim() === "") _char = String.fromCharCode(160)
-				if (_char === "\n") continue
 
 				const range = document.createRange()
 				range.setStart(textNode, i)
@@ -564,12 +579,16 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 
 				const rect = range.getBoundingClientRect()
 
-				c.push({ char: _char, rect })
+				c.push({
+					char: _char,
+					rect,
+				})
 			}
 		})
 
 		return {
 			rect: el.getBoundingClientRect(),
+			parentRect,
 			characters: c,
 			type: el.tagName.toLowerCase(),
 			classList: el.classList,
@@ -622,7 +641,15 @@ const ASCIIGrid = ({
 	})
 
 	return (
-		<div ref={parentRef} className="leading-none">
+		<div
+			ref={parentRef}
+			className="leading-none ascii-parent"
+			style={{
+				fontFamily: grid.options.font,
+				fontSize: `${grid.options.fontSize}px`,
+				fontWeight: grid.options.fontWeight,
+			}}
+		>
 			<div
 				style={{ width: grid.truncWidth, height: grid.truncHeight }}
 				//show actual DOM elements if debug is on

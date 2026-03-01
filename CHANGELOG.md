@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.8.0] - 2026-03-01
+
+### Added
+
+- `ascii-parent` class for locking elements' movement to their parents
+- `font`, `fontSize` and `fontWeight` options added to `<ASCIIProvider>`
+
+### Changed
+
+- `<ASCIIProvider>` now uses Canvas TextMetrics to calculate font width and height for the grid initialization
+
+### Fixed
+
+- Much less "wiggly-ness" or dancing borders when moving elements
+
+### Removed
+
+- Various redundant things
+
 ## [0.7.1] - 2026-02-26
 
 ### Added
