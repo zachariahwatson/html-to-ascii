@@ -8,100 +8,67 @@ function App() {
 	const grid = useGridContext()
 	return (
 		<ASCII>
-			{/* <div className="flex justify-center"> */}
-			<div ref={nodeRef} className="w-[599px] h-71 border ascii-border ascii-text whitespace-pre">
+			<div ref={nodeRef} className="ascii-text whitespace-pre p-4">
 				{String.raw`
-   /$$
-  | $$
- /$$$$$$    /$$$$$$
-|_  $$_/   /$$__  $$
-  | $$    | $$$$$$$$|
-  | $$ /$$| $$_____/
-  |  $$$$/|  $$$$$$$
-   \___/   \_______/          
-					`}
-				<a href="https://en.wikipedia.org/wiki/Block_Elements">a link</a>
-				{/* <div className="m-4 ascii-border-tl ascii-border-br h-8" />
-					<div className="m-2 border h-8 ascii-border-r ascii-border-b" />
-					<button className="ascii-border ascii-text">button</button>
-					<br></br>
-					<a href="https://en.wikipedia.org/wiki/Block_Elements" className="ascii-border ascii-text">
-						a link
-					</a> */}
+      ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+     ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+    ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+   ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+  ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+ ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+            ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+            ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+           ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+          ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+         ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+        ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼         
+`}
 			</div>
-			<Draggable nodeRef={nodeRef} grid={[grid.fontWidth, grid.fontHeight]}>
+			<div className="ascii-text whitespace-pre-wrap">
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam euismod eros nec libero finibus placerat.
+				Vestibulum cursus, elit eu rhoncus blandit, eros nisi volutpat mi, in tempus leo arcu in massa. Praesent
+				bibendum hendrerit ante ut lobortis. Donec felis libero, rutrum ac orci id, fringilla tristique sem.
+				Pellentesque dapibus urna vel nisl maximus ullamcorper. Duis ultrices orci elit, sed laoreet dui finibus
+				interdum. Fusce odio purus, laoreet at volutpat rutrum, placerat quis metus. Sed fringilla scelerisque tempus.
+				Proin facilisis posuere nisi, quis mattis nunc vehicula hendrerit.
+			</div>
+			<label htmlFor="cars" className="border ascii-text">
+				Choose a car:
+			</label>
+			<select name="cars" id="cars" className="border ascii h-8">
+				<option value="volvo">Volvo</option>
+				<option value="saab">Saab</option>
+				<option value="mercedes">Mercedes</option>
+				<option value="audi">Audi</option>
+			</select>
+			<Draggable
+				nodeRef={nodeRef}
+				//grid={[grid.fontWidth, grid.fontHeight]}
+			>
 				<div
 					ref={nodeRef}
-					className="w-[599px] h-71 border ascii-border ascii-text whitespace-pre pointer-events-auto cursor-grab ascii-shadow-bl"
+					className="ascii-border absolute ascii-shadow-bl border w-64 pointer-events-auto cursor-grab react-draggable-dragging:cursor-grabbing ascii-parent"
 				>
-					{String.raw`
-   /$$
-  | $$
- /$$$$$$    /$$$$$$
-|_  $$_/   /$$__  $$
-  | $$    | $$$$$$$$|
-  | $$ /$$| $$_____/
-  |  $$$$/|  $$$$$$$
-   \___/   \_______/          
-					`}
-					<a href="https://en.wikipedia.org/wiki/Block_Elements" className="ascii-border ascii-text ascii-underline">
-						a link
-					</a>
-					{/* <div className="m-4 ascii-border-tl ascii-border-br h-8" />
-					<div className="m-2 border h-8 ascii-border-r ascii-border-b" />
-					<button className="ascii-border ascii-text">button</button>
-					<br></br>
-					<a href="https://en.wikipedia.org/wiki/Block_Elements" className="ascii-border ascii-text">
-						a link
-					</a> */}
+					<div>
+						<div className="ascii-text pl-1">test</div>
+						<div className="ascii-text pl-2">test</div>
+						<div className="ascii-text pl-3">test</div>
+						<div className="ascii-text pl-4">test</div>
+						<div className="ascii-text pl-5">test</div>
+						<div className="ascii-text pl-6">test</div>
+						<div className="ascii-text pl-7">test</div>
+						<div className="flex flex-col items-center">
+							<div className="ascii pl-1">test</div>
+							<div className="ascii pl-2">test</div>
+							<div className="ascii pl-3">test</div>
+							<div className="ascii pl-4">test</div>
+						</div>
+					</div>
 				</div>
 			</Draggable>
-			<Draggable nodeRef={nodeRef} grid={[grid.fontWidth, grid.fontHeight]}>
-				<div
-					ref={nodeRef}
-					className="w-[599px] h-500 border ascii-border ascii-text whitespace-pre pointer-events-auto cursor-grab ascii-shadow-bl"
-				>
-					{String.raw`
-   /$$
-  | $$
- /$$$$$$    /$$$$$$
-|_  $$_/   /$$__  $$
-  | $$    | $$$$$$$$|
-  | $$ /$$| $$_____/
-  |  $$$$/|  $$$$$$$
-   \___/   \_______/          
-					`}
-					<a href="https://en.wikipedia.org/wiki/Block_Elements" className="ascii-border ascii-text underline">
-						html-to-ascii v0.6.0
-					</a>
-					<br></br>
-					test
-					{/* <div className="m-4 ascii-border-tl ascii-border-br h-8" />
-					<div className="m-2 border h-8 ascii-border-r ascii-border-b" />
-					<button className="ascii-border ascii-text">button</button>
-					<br></br>
-					<a href="https://en.wikipedia.org/wiki/Block_Elements" className="ascii-border ascii-text">
-						a link
-					</a> */}
-				</div>
-			</Draggable>
-			{/* <textarea className="w-64 h-64 ascii-border" defaultValue={"test"}></textarea>
-				<br></br>
-				<div className="p-4">
-					{" "}
-					<label htmlFor="cars" className="border">
-						Choose a car:
-					</label>
-					<select name="cars" id="cars" className="border">
-						<option value="volvo">Volvo</option>
-						<option value="saab">Saab</option>
-						<option value="mercedes">Mercedes</option>
-						<option value="audi">Audi</option>
-					</select>
-				</div> */}
-			{/* <div className="ascii p-4">
-					<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmancelona-vet.com%2Fwp-content%2Fuploads%2F2022%2F04%2FPuppy-Care.png&f=1&nofb=1&ipt=fdd8b957d76c0c6eda753c0b89ca41de8642c16b654126bf5cd82e61c0d114ea"></img>
-				</div> */}
+
 			{/* </div> */}
 		</ASCII>
 	)
