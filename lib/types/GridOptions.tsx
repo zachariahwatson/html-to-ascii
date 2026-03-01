@@ -18,4 +18,7 @@ export interface GridOptions {
 	st: string
 	sb: string
 	debug: boolean
+	font: string
+	fontSize: number
+	fontWeight: number
 }

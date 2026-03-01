@@ -20,4 +20,7 @@ export const defaultOptions: GridOptions = {
 	st: "█",
 	sb: "█",
 	debug: false,
+	font: "'Cascadia Mono', 'Courier New', Courier, monospace",
+	fontSize: 16,
+	fontWeight: 400,
 }
