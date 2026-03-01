@@ -24,6 +24,8 @@ function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: 
 const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const maxCols = grid.cols - 1
 
+	const trim = 1e-6
+
 	//get the bounding rows and cols of the element
 	const leftCol = Math.floor(rect.rect.left * invFontWidth + trim)
 	const rightCol = Math.floor(rect.rect.right * invFontWidth + trim)
