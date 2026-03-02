@@ -6,7 +6,7 @@ import { ASCIIProvider } from "../lib/providers/ASCIIProvider.tsx"
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<ASCIIProvider>
+		<ASCIIProvider sl="░" sr="░" st="░" sb="░">
 			<App />
 		</ASCIIProvider>
 	</StrictMode>,
