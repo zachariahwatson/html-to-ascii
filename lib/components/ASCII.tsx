@@ -640,11 +640,12 @@ const ASCIIGrid = ({
 	return (
 		<div
 			ref={parentRef}
-			className="leading-none ascii-parent"
+			className="ascii-parent"
 			style={{
 				fontFamily: grid.options.font,
 				fontSize: `${grid.options.fontSize}px`,
 				fontWeight: grid.options.fontWeight,
+				lineHeight: `${grid.fontHeight}px`,
 			}}
 		>
 			<div

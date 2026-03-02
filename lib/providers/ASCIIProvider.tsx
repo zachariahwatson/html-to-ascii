@@ -16,11 +16,11 @@ function initGrid({ width, height, ...options }: { width: number; height: number
 	const canvas = document.createElement("canvas")
 	const ctx = canvas.getContext("2d")!
 	ctx.font = `${mergedOptions.fontSize}px ${mergedOptions.font}`
-	const text = "m"
+	const text = "█"
 	const metrics = ctx.measureText(text)
 
-	const fontWidth = metrics.width
-	const fontHeight = metrics.emHeightAscent + metrics.emHeightDescent
+	const fontWidth = metrics.actualBoundingBoxRight - metrics.actualBoundingBoxLeft
+	const fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
 	const truncWidth = width - (width % fontWidth)
 	const truncHeight = height - (height % fontHeight)
 	const rows = Math.floor(truncHeight / fontHeight)
