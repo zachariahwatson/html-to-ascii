@@ -620,9 +620,6 @@ const ASCIIGrid = ({
 		const loop = () => {
 			rectsRef.current = getElements(parentRef)
 			frame = requestAnimationFrame(loop)
-			if (frame === 1) {
-				console.log(rectsRef.current)
-			}
 			forceRender()
 		}
 
