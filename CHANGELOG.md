@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.8.1] - 2026-03-01
+
+### Changed
+
+- Use the font's actual bounding box instead of the em bounding box to calculate grid height
+
 ## [0.8.0] - 2026-03-01
 
 ### Added
@@ -199,6 +205,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII box customization
 - Basic position change monitoring
 
+[0.7.1]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.6.1...v0.6.2
