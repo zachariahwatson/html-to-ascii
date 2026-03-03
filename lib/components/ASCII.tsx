@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useReducer, useRef, useState } from "react"
+import { useLayoutEffect, useReducer, useRef } from "react"
 import type { GridData } from "../types/GridData"
 import type { Rect } from "../types/Rect"
 import { useGridContext } from "../hooks/useGridContext"
@@ -684,17 +684,17 @@ const ASCIIGrid = ({
 }
 
 export const ASCII = (props: React.ComponentProps<typeof ASCIIGrid>) => {
-	const [key, setKey] = useState(0)
+	//const [key, setKey] = useState(0)
 
 	//trick page to refresh to draw a new grid when window is resized (doesn't work on minimize or maximize; fix)
-	useEffect(() => {
-		const handleResize = () => {
-			setKey((k) => k + 1)
-		}
+	// useEffect(() => {
+	// 	const handleResize = () => {
+	// 		setKey((k) => k + 1)
+	// 	}
 
-		window.addEventListener("resize", handleResize)
-		return () => window.removeEventListener("resize", handleResize)
-	}, [])
+	// 	window.addEventListener("resize", handleResize)
+	// 	return () => window.removeEventListener("resize", handleResize)
+	// }, [])
 
-	return <ASCIIGrid key={key} {...props} />
+	return <ASCIIGrid /*key={key}*/ {...props} />
 }
