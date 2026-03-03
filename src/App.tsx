@@ -68,7 +68,44 @@ function App() {
 					</div>
 				</div>
 			</Draggable>
-
+			<Draggable
+				nodeRef={nodeRef}
+				//grid={[grid.fontWidth, grid.fontHeight]}
+				handle="strong"
+			>
+				<div
+					ref={nodeRef}
+					className="ascii-border absolute ascii-shadow-bl ascii-parent"
+					style={{
+						width: 500,
+						height: 500,
+					}}
+				>
+					<strong className="pointer-events-auto cursor-grab react-draggable-dragging:cursor-grabbing">
+						<div className="w-full h-8 ascii ascii-border-b whitespace-pre flex justify-end px-2 space-x-2">
+							<div className="absolute left-6 top-4 ascii-text ascii-no-fill">test</div>
+							<div className="absolute top-4 ascii-text ascii-no-fill">a b c</div>
+						</div>
+					</strong>
+					<div className="absolute whitespace-pre pl-5 top-12 ascii-text ascii-no-fill">
+						{String.raw`
+   ______________________
+ / \        __  _    _   \
+|   |      /  )' )  /    |
+ \_ |     /     (  /     |
+    |    (__/    \/      |
+    |                    |
+    | ########           |
+    |  . ~~~~~~~~~~~~~~~ |
+    |  . ~~~~~~~         |
+    | ###### ####        |
+    |  . ~~~~~~~~~~~     |
+    |  __________________|__
+    \_ /what
+`}
+					</div>
+				</div>
+			</Draggable>
 			{/* </div> */}
 		</ASCII>
 	)

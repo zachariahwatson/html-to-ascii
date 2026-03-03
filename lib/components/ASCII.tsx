@@ -568,10 +568,10 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 			const text = textNode.textContent ?? ""
 
 			for (let i = 0; i < text.length; i++) {
-				let _char = text[i]
+				let char = text[i]
 
 				//sanitizing whitespace
-				if (_char.trim() === "") _char = String.fromCharCode(160)
+				if (char.trim() === "") char = String.fromCharCode(160)
 
 				const range = document.createRange()
 				range.setStart(textNode, i)
@@ -580,7 +580,7 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 				const rect = range.getBoundingClientRect()
 
 				c.push({
-					char: _char,
+					char,
 					rect,
 				})
 			}
@@ -621,6 +621,9 @@ const ASCIIGrid = ({
 			rectsRef.current = getElements(parentRef)
 			frame = requestAnimationFrame(loop)
 			forceRender()
+			// if (frame === 1) {
+			// 	console.log(rectsRef.current)
+			// }
 		}
 
 		loop()

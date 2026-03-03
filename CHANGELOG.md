@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.8.2] - 2026-03-02
+
+### Fixed
+
+- Used the wrong font width calculation which resulted in the grid breaking on certain characters that had different dimensions
+
 ## [0.8.1] - 2026-03-01
 
 ### Changed
@@ -205,6 +211,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII box customization
 - Basic position change monitoring
 
+[0.7.1]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.8.1...v0.8.2
 [0.7.1]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.7.0...v0.7.1
