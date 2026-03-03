@@ -19,7 +19,7 @@ function initGrid({ width, height, ...options }: { width: number; height: number
 	const text = "█"
 	const metrics = ctx.measureText(text)
 
-	const fontWidth = metrics.actualBoundingBoxRight - metrics.actualBoundingBoxLeft
+	const fontWidth = metrics.width
 	const fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
 	const truncWidth = width - (width % fontWidth)
 	const truncHeight = height - (height % fontHeight)
