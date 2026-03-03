@@ -512,7 +512,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				let j = 0
 				while (i + j < rect.characters.length) {
 					const c = rect.characters[i + j]
-					if (c.char === String.fromCharCode(160) || c.char === "\n") {
+					if (c.char === "\u{0A0}" || c.char === "\n") {
 						j++
 						break
 					}
@@ -571,7 +571,7 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 				let char = text[i]
 
 				//sanitizing whitespace
-				if (char.trim() === "") char = String.fromCharCode(160)
+				if (char.trim() === "") char = "\u{0A0}"
 
 				const range = document.createRange()
 				range.setStart(textNode, i)
@@ -631,10 +631,8 @@ const ASCIIGrid = ({
 		return () => cancelAnimationFrame(frame)
 	}, [])
 
-	// clear canvas, maybe find better way
-	for (let i = 0; i < grid.grid.length; i++) {
-		grid.grid[i] = String.fromCharCode(160)
-	}
+	// clear canvas
+	grid.grid.fill("\u{0A0}")
 
 	rectsRef.current.forEach((rect) => {
 		drawRect({ rect, grid })
@@ -674,7 +672,7 @@ const ASCIIGrid = ({
 						const end = start + grid.cols
 
 						for (let i = start; i < end; i++) {
-							str += reveal[i] ?? String.fromCharCode(160)
+							str += reveal[i] ?? "\u{0A0}"
 						}
 
 						return <div key={r}>{str}</div>

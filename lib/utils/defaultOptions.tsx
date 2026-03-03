@@ -14,7 +14,7 @@ export const defaultOptions: GridOptions = {
 	br: "┘",
 	bl: "└",
 	i: "┼",
-	fill: String.fromCharCode(160),
+	fill: "\u{0A0}",
 	sl: "█",
 	sr: "█",
 	st: "█",
