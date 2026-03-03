@@ -663,7 +663,10 @@ const ASCIIGrid = ({
 				{children}
 			</div>
 			{parentRef.current && rectsRef.current && (
-				<div className="fixed top-0 left-0 z-0" style={{ width: grid.truncWidth, height: grid.truncHeight }}>
+				<div
+					className="fixed top-0 left-0 z-0 whitespace-pre"
+					style={{ width: grid.truncWidth, height: grid.truncHeight }}
+				>
 					{/* kind of ugly, but is required to get ASCII art to work (come back to this perhaps) - splits the grid string into rows */}
 					{Array.from({ length: grid.rows }, (_, r) => {
 						let str = ""
