@@ -1,11 +1,10 @@
 import Draggable from "react-draggable"
 import { ASCII } from "../lib/components/ASCII"
 import { useRef } from "react"
-import { useGridContext } from "../lib/hooks/useGridContext"
+//import { useGridContext } from "../lib/hooks/useGridContext"
 
 function App() {
 	const nodeRef = useRef(null)
-	const grid = useGridContext()
 	return (
 		<ASCII>
 			<div ref={nodeRef} className="ascii-text whitespace-pre p-4">
@@ -23,7 +22,7 @@ function App() {
           ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
          ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
         ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
-       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼         
+       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
 `}
 			</div>
 			<div className="ascii-text whitespace-pre-wrap">
@@ -68,11 +67,7 @@ function App() {
 					</div>
 				</div>
 			</Draggable>
-			<Draggable
-				nodeRef={nodeRef}
-				//grid={[grid.fontWidth, grid.fontHeight]}
-				handle="strong"
-			>
+			<Draggable nodeRef={nodeRef} handle="strong">
 				<div
 					ref={nodeRef}
 					className="ascii-border absolute ascii-shadow-bl ascii-parent"

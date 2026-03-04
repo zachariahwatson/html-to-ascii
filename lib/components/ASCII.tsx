@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useReducer, useRef, useState } from "react"
+import { useLayoutEffect, useReducer, useRef } from "react"
 import type { GridData } from "../types/GridData"
 import type { Rect } from "../types/Rect"
 import { useGridContext } from "../hooks/useGridContext"
@@ -512,7 +512,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 				let j = 0
 				while (i + j < rect.characters.length) {
 					const c = rect.characters[i + j]
-					if (c.char === String.fromCharCode(160) || c.char === "\n") {
+					if (c.char === "\u{0A0}" || c.char === "\n") {
 						j++
 						break
 					}
@@ -571,7 +571,7 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 				let char = text[i]
 
 				//sanitizing whitespace
-				if (char.trim() === "") char = String.fromCharCode(160)
+				if (char.trim() === "") char = "\u{0A0}"
 
 				const range = document.createRange()
 				range.setStart(textNode, i)
@@ -631,10 +631,8 @@ const ASCIIGrid = ({
 		return () => cancelAnimationFrame(frame)
 	}, [])
 
-	// clear canvas, maybe find better way
-	for (let i = 0; i < grid.grid.length; i++) {
-		grid.grid[i] = String.fromCharCode(160)
-	}
+	// clear canvas
+	grid.grid.fill("\u{0A0}")
 
 	rectsRef.current.forEach((rect) => {
 		drawRect({ rect, grid })
@@ -663,7 +661,10 @@ const ASCIIGrid = ({
 				{children}
 			</div>
 			{parentRef.current && rectsRef.current && (
-				<div className="fixed top-0 left-0 z-0" style={{ width: grid.truncWidth, height: grid.truncHeight }}>
+				<div
+					className="fixed top-0 left-0 z-0 whitespace-pre"
+					style={{ width: grid.truncWidth, height: grid.truncHeight }}
+				>
 					{/* kind of ugly, but is required to get ASCII art to work (come back to this perhaps) - splits the grid string into rows */}
 					{Array.from({ length: grid.rows }, (_, r) => {
 						let str = ""
@@ -671,7 +672,7 @@ const ASCIIGrid = ({
 						const end = start + grid.cols
 
 						for (let i = start; i < end; i++) {
-							str += reveal[i] ?? String.fromCharCode(160)
+							str += reveal[i] ?? "\u{0A0}"
 						}
 
 						return <div key={r}>{str}</div>
@@ -683,17 +684,17 @@ const ASCIIGrid = ({
 }
 
 export const ASCII = (props: React.ComponentProps<typeof ASCIIGrid>) => {
-	const [key, setKey] = useState(0)
+	//const [key, setKey] = useState(0)
 
 	//trick page to refresh to draw a new grid when window is resized (doesn't work on minimize or maximize; fix)
-	useEffect(() => {
-		const handleResize = () => {
-			setKey((k) => k + 1)
-		}
+	// useEffect(() => {
+	// 	const handleResize = () => {
+	// 		setKey((k) => k + 1)
+	// 	}
 
-		window.addEventListener("resize", handleResize)
-		return () => window.removeEventListener("resize", handleResize)
-	}, [])
+	// 	window.addEventListener("resize", handleResize)
+	// 	return () => window.removeEventListener("resize", handleResize)
+	// }, [])
 
-	return <ASCIIGrid key={key} {...props} />
+	return <ASCIIGrid /*key={key}*/ {...props} />
 }
