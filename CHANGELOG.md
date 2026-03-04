@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.8.3] - 2026-03-03
+
+### Fixed
+
+- Font width was not the problem (see v0.8.2), just needed to add `whitespace-pre` to the container div
+
 ## [0.8.2] - 2026-03-02
 
 ### Fixed
