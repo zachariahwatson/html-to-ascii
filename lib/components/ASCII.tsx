@@ -639,11 +639,20 @@ const ASCIIGrid = ({
 			subtree: true,
 		})
 
-		//parentRef.current.querySelectorAll<HTMLElement>('[class*="ascii"]').forEach((el) => resizeObserver.observe(el))
+		window.addEventListener("scroll", schedule, { passive: true })
+		parentRef.current.addEventListener("input", schedule)
+		parentRef.current.addEventListener("change", schedule)
+		parentRef.current.addEventListener("animationstart", schedule)
+		parentRef.current.addEventListener("transitionstart", schedule)
 
 		return () => {
 			resizeObserver.disconnect()
 			mutationObserver.disconnect()
+			window.removeEventListener("scroll", schedule)
+			parentRef.current?.removeEventListener("input", schedule)
+			parentRef.current?.removeEventListener("change", schedule)
+			parentRef.current?.removeEventListener("animationstart", schedule)
+			parentRef.current?.removeEventListener("transitionstart", schedule)
 		}
 	}, [])
 
