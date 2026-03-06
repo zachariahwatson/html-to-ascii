@@ -101,7 +101,8 @@ function App() {
 					</div>
 				</div>
 			</Draggable>
-			{/* </div> */}
+			<textarea className="ascii border ascii-parent" />
+			<input type="text" className="ascii border ascii-parent" />
 		</ASCII>
 	)
 }
