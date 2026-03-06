@@ -611,24 +611,40 @@ const ASCIIGrid = ({
 	const reveal = gridReveal ? useReveal(grid.grid, revealDuration) : grid.grid
 	const [, forceRender] = useReducer((x) => x + 1, 0)
 
-	//poll for changes in the DOM
+	//monitor changes in the DOM
 	useLayoutEffect(() => {
 		if (!parentRef.current) return
 
-		let frame: number
+		const schedule = (() => {
+			let scheduled = false
+			return () => {
+				if (scheduled) return
+				scheduled = true
+				requestAnimationFrame(() => {
+					rectsRef.current = getElements(parentRef)
+					forceRender()
+					scheduled = false
+				})
+			}
+		})()
 
-		const loop = () => {
-			rectsRef.current = getElements(parentRef)
-			frame = requestAnimationFrame(loop)
-			forceRender()
-			// if (frame === 1) {
-			// 	console.log(rectsRef.current)
-			// }
+		const resizeObserver = new ResizeObserver(schedule)
+		const mutationObserver = new MutationObserver(schedule)
+
+		resizeObserver.observe(parentRef.current)
+		mutationObserver.observe(parentRef.current, {
+			attributes: true,
+			characterData: true,
+			childList: true,
+			subtree: true,
+		})
+
+		//parentRef.current.querySelectorAll<HTMLElement>('[class*="ascii"]').forEach((el) => resizeObserver.observe(el))
+
+		return () => {
+			resizeObserver.disconnect()
+			mutationObserver.disconnect()
 		}
-
-		loop()
-
-		return () => cancelAnimationFrame(frame)
 	}, [])
 
 	// clear canvas
