@@ -24,18 +24,16 @@ function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: 
 const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const maxCols = grid.cols - 1
 
-	const trim = 1e-6
-
 	//get the bounding rows and cols of the element
-	const parentLeft = Math.floor(rect.parentRect.left / grid.fontWidth + trim)
-	const leftOffset = Math.floor((rect.rect.left - rect.parentRect.left) / grid.fontWidth + trim)
+	const parentLeft = Math.round(rect.parentRect.left / grid.fontWidth)
+	const leftOffset = Math.round((rect.rect.left - rect.parentRect.left) / grid.fontWidth)
 	const leftCol = parentLeft + leftOffset
-	const rightOffset = Math.floor((rect.rect.right - rect.rect.left) / grid.fontWidth + trim)
+	const rightOffset = Math.round((rect.rect.right - rect.rect.left) / grid.fontWidth)
 	const rightCol = leftCol + rightOffset
-	const parentTop = Math.floor(rect.parentRect.top / grid.fontHeight + trim)
-	const topOffset = Math.floor((rect.rect.top - rect.parentRect.top) / grid.fontHeight + trim)
+	const parentTop = Math.round(rect.parentRect.top / grid.fontHeight)
+	const topOffset = Math.round((rect.rect.top - rect.parentRect.top) / grid.fontHeight)
 	const topRow = parentTop + topOffset
-	const bottomOffset = Math.floor((rect.rect.bottom - rect.rect.top) / grid.fontHeight + trim)
+	const bottomOffset = Math.round((rect.rect.bottom - rect.rect.top) / grid.fontHeight)
 	const bottomRow = topRow + bottomOffset
 
 	const cl = rect.classList
@@ -506,7 +504,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		if (rect.characters.length > 0) {
 			let i = 0
 			while (i < rect.characters.length) {
-				const rowOffset = Math.round((rect.characters[i].rect.top - rect.rect.top) / grid.fontHeight + trim)
+				const rowOffset = Math.round((rect.characters[i].rect.top - rect.rect.top) / grid.fontHeight)
 				const row = topRow + rowOffset
 
 				let j = 0
@@ -517,7 +515,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 						break
 					}
 
-					const colOffset = Math.round((c.rect.left - rect.rect.left) / grid.fontWidth + trim)
+					const colOffset = Math.round((c.rect.left - rect.rect.left) / grid.fontWidth)
 					const col = leftCol + colOffset
 
 					if (!(col < 0 || col > maxCols)) {
