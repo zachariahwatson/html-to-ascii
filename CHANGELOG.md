@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.9.0] - 2026-03-07
+
+### Changed
+
+- Calculate font metrics using opentype.js
+- Grid now only reveals on mount, not resizes
+- Use multiple observers and listeners instead of constantly polling for changes every frame
+- Default font size is 18px to help mitigate cross-browser rounding issues
+
 ## [0.8.3] - 2026-03-03
 
 ### Fixed
