@@ -21,7 +21,7 @@ export default defineConfig({
 			name: "html-to-ascii",
 			fileName: (format) => `index.${format}.js`,
 		},
-		copyPublicDir: false,
+		copyPublicDir: true,
 		rollupOptions: {
 			external: ["react", "react-dom", "react/jsx-runtime"],
 			output: {

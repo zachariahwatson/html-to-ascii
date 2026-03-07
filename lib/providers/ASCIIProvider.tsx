@@ -1,27 +1,30 @@
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { GridContext } from "../contexts/GridContext"
 import { useWindowDimensions } from "../hooks/useWindowDimensions"
 import type { ASCIIProviderProps } from "../types/ASCIIProviderProps"
 import type { GridData } from "../types/GridData"
 import type { GridOptions } from "../types/GridOptions"
 import { defaultOptions } from "../utils/defaultOptions"
+import { Font, parse } from "opentype.js"
 
-function initGrid({ width, height, ...options }: { width: number; height: number } & Partial<GridOptions>): GridData {
+function initGrid({
+	width,
+	height,
+	fontData,
+	...options
+}: { width: number; height: number; fontData: Font } & Partial<GridOptions>): GridData {
 	const mergedOptions: GridOptions = {
 		...defaultOptions,
 		...options,
 	}
 
 	//calculate font dimensions
-	const canvas = document.createElement("canvas")
-	const ctx = canvas.getContext("2d")!
-	ctx.font = `${mergedOptions.fontSize}px ${mergedOptions.font}`
-	const text = "█"
-	const metrics = ctx.measureText(text)
+	const unitsPerEm = fontData.unitsPerEm || 1000
+	const fontSize = mergedOptions.fontSize
+	const fontWidth = (fontData.tables.hhea.advanceWidthMax * fontSize) / unitsPerEm
+	const fontHeight = ((fontData.tables.hhea.ascender - fontData.tables.hhea.descender) * fontSize) / unitsPerEm
 
-	const fontWidth = metrics.actualBoundingBoxRight - metrics.actualBoundingBoxLeft
-
-	const fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
+	//calculate grid dimensions
 	const truncWidth = width - (width % fontWidth)
 	const truncHeight = height - (height % fontHeight)
 	const rows = Math.floor(truncHeight / fontHeight)
@@ -44,7 +47,21 @@ function initGrid({ width, height, ...options }: { width: number; height: number
 
 export function ASCIIProvider({ children, ...options }: ASCIIProviderProps) {
 	const { width, height } = useWindowDimensions()
-	const grid = useMemo(() => initGrid({ width, height, ...options }), [width, height, options])
+	const [fontData, setFontData] = useState<Font | null>(null)
 
+	useEffect(() => {
+		fetch(options.fontPath ?? "/fonts/CascadiaMono-VariableFont_wght.ttf")
+			.then((res) => res.arrayBuffer())
+			.then((data) => {
+				setFontData(parse(data))
+			})
+	}, [options.fontPath])
+
+	const grid = useMemo(() => {
+		if (!fontData) return null
+		return initGrid({ width, height, fontData, ...options })
+	}, [width, height, fontData, options])
+
+	if (!grid) return null
 	return <GridContext.Provider value={grid}>{children}</GridContext.Provider>
 }

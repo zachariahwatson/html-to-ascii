@@ -24,18 +24,16 @@ function getCharOverride(cl: DOMTokenList, option: keyof GridOptions, fallback: 
 const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const maxCols = grid.cols - 1
 
-	const trim = 1e-6
-
 	//get the bounding rows and cols of the element
-	const parentLeft = Math.floor(rect.parentRect.left / grid.fontWidth + trim)
-	const leftOffset = Math.floor((rect.rect.left - rect.parentRect.left) / grid.fontWidth + trim)
+	const parentLeft = Math.floor(rect.parentRect.left / grid.fontWidth)
+	const leftOffset = Math.floor((rect.rect.left - rect.parentRect.left) / grid.fontWidth)
 	const leftCol = parentLeft + leftOffset
-	const rightOffset = Math.floor((rect.rect.right - rect.rect.left) / grid.fontWidth + trim)
+	const rightOffset = Math.floor((rect.rect.right - rect.rect.left) / grid.fontWidth)
 	const rightCol = leftCol + rightOffset
-	const parentTop = Math.floor(rect.parentRect.top / grid.fontHeight + trim)
-	const topOffset = Math.floor((rect.rect.top - rect.parentRect.top) / grid.fontHeight + trim)
+	const parentTop = Math.floor(rect.parentRect.top / grid.fontHeight)
+	const topOffset = Math.floor((rect.rect.top - rect.parentRect.top) / grid.fontHeight)
 	const topRow = parentTop + topOffset
-	const bottomOffset = Math.floor((rect.rect.bottom - rect.rect.top) / grid.fontHeight + trim)
+	const bottomOffset = Math.floor((rect.rect.bottom - rect.rect.top) / grid.fontHeight)
 	const bottomRow = topRow + bottomOffset
 
 	const cl = rect.classList
@@ -506,7 +504,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 		if (rect.characters.length > 0) {
 			let i = 0
 			while (i < rect.characters.length) {
-				const rowOffset = Math.round((rect.characters[i].rect.top - rect.rect.top) / grid.fontHeight + trim)
+				const rowOffset = Math.round((rect.characters[i].rect.top - rect.rect.top) / grid.fontHeight)
 				const row = topRow + rowOffset
 
 				let j = 0
@@ -517,7 +515,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 						break
 					}
 
-					const colOffset = Math.round((c.rect.left - rect.rect.left) / grid.fontWidth + trim)
+					const colOffset = Math.round((c.rect.left - rect.rect.left) / grid.fontWidth)
 					const col = leftCol + colOffset
 
 					if (!(col < 0 || col > maxCols)) {
@@ -611,24 +609,49 @@ const ASCIIGrid = ({
 	const reveal = gridReveal ? useReveal(grid.grid, revealDuration) : grid.grid
 	const [, forceRender] = useReducer((x) => x + 1, 0)
 
-	//poll for changes in the DOM
+	//monitor changes in the DOM
 	useLayoutEffect(() => {
 		if (!parentRef.current) return
 
-		let frame: number
+		const schedule = (() => {
+			let scheduled = false
+			return () => {
+				if (scheduled) return
+				scheduled = true
+				requestAnimationFrame(() => {
+					rectsRef.current = getElements(parentRef)
+					forceRender()
+					scheduled = false
+				})
+			}
+		})()
 
-		const loop = () => {
-			rectsRef.current = getElements(parentRef)
-			frame = requestAnimationFrame(loop)
-			forceRender()
-			// if (frame === 1) {
-			// 	console.log(rectsRef.current)
-			// }
+		const resizeObserver = new ResizeObserver(schedule)
+		const mutationObserver = new MutationObserver(schedule)
+
+		resizeObserver.observe(parentRef.current)
+		mutationObserver.observe(parentRef.current, {
+			attributes: true,
+			characterData: true,
+			childList: true,
+			subtree: true,
+		})
+
+		window.addEventListener("scroll", schedule, { passive: true })
+		parentRef.current.addEventListener("input", schedule)
+		parentRef.current.addEventListener("change", schedule)
+		parentRef.current.addEventListener("animationstart", schedule)
+		parentRef.current.addEventListener("transitionstart", schedule)
+
+		return () => {
+			resizeObserver.disconnect()
+			mutationObserver.disconnect()
+			window.removeEventListener("scroll", schedule)
+			parentRef.current?.removeEventListener("input", schedule)
+			parentRef.current?.removeEventListener("change", schedule)
+			parentRef.current?.removeEventListener("animationstart", schedule)
+			parentRef.current?.removeEventListener("transitionstart", schedule)
 		}
-
-		loop()
-
-		return () => cancelAnimationFrame(frame)
 	}, [])
 
 	// clear canvas

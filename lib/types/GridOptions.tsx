@@ -19,6 +19,7 @@ export interface GridOptions {
 	sb: string
 	debug: boolean
 	font: string
+	fontPath: string
 	fontSize: number
 	fontWeight: number
 }
