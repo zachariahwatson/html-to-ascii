@@ -25,15 +25,15 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const maxCols = grid.cols - 1
 
 	//get the bounding rows and cols of the element
-	const parentLeft = Math.round(rect.parentRect.left / grid.fontWidth)
-	const leftOffset = Math.round((rect.rect.left - rect.parentRect.left) / grid.fontWidth)
+	const parentLeft = Math.floor(rect.parentRect.left / grid.fontWidth)
+	const leftOffset = Math.floor((rect.rect.left - rect.parentRect.left) / grid.fontWidth)
 	const leftCol = parentLeft + leftOffset
-	const rightOffset = Math.round((rect.rect.right - rect.rect.left) / grid.fontWidth)
+	const rightOffset = Math.floor((rect.rect.right - rect.rect.left) / grid.fontWidth)
 	const rightCol = leftCol + rightOffset
-	const parentTop = Math.round(rect.parentRect.top / grid.fontHeight)
-	const topOffset = Math.round((rect.rect.top - rect.parentRect.top) / grid.fontHeight)
+	const parentTop = Math.floor(rect.parentRect.top / grid.fontHeight)
+	const topOffset = Math.floor((rect.rect.top - rect.parentRect.top) / grid.fontHeight)
 	const topRow = parentTop + topOffset
-	const bottomOffset = Math.round((rect.rect.bottom - rect.rect.top) / grid.fontHeight)
+	const bottomOffset = Math.floor((rect.rect.bottom - rect.rect.top) / grid.fontHeight)
 	const bottomRow = topRow + bottomOffset
 
 	const cl = rect.classList
