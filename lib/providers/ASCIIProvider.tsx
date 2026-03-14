@@ -50,7 +50,7 @@ export function ASCIIProvider({ children, ...options }: ASCIIProviderProps) {
 	const [fontData, setFontData] = useState<Font | null>(null)
 
 	useEffect(() => {
-		fetch(options.fontPath ?? "/fonts/CascadiaMono-VariableFont_wght.ttf")
+		fetch(options.fontPath ?? "../fonts/CascadiaMono-VariableFont_wght.ttf")
 			.then((res) => res.arrayBuffer())
 			.then((data) => {
 				setFontData(parse(data))
