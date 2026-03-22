@@ -27,10 +27,12 @@ export default defineConfig({
 				globals: {
 					react: "React",
 					"react-dom": "ReactDOM",
+					"react/jsx-runtime": "jsxRuntime",
 				},
 			},
 		},
 		sourcemap: true,
 		emptyOutDir: true,
+		copyPublicDir: false,
 	},
 })
