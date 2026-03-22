@@ -9,14 +9,5 @@
 		"declarationMap": true,
 		"emitDeclarationOnly": false
 	},
-	"include": [
-		"lib",
-		"lib/contexts",
-		"lib/hooks",
-		"lib/providers",
-		"lib/types",
-		"lib/utils",
-		"lib/components",
-		"lib/index.ts"
-	]
+	"include": ["lib"]
 }

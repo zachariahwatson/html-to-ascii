@@ -6,7 +6,6 @@ import type { GridData } from "../types/GridData"
 import type { GridOptions } from "../types/GridOptions"
 import { defaultOptions } from "../utils/defaultOptions"
 import { Font, parse } from "opentype.js"
-
 function initGrid({
 	width,
 	height,
@@ -48,9 +47,10 @@ function initGrid({
 export function ASCIIProvider({ children, ...options }: ASCIIProviderProps) {
 	const { width, height } = useWindowDimensions()
 	const [fontData, setFontData] = useState<Font | null>(null)
+	//const defaultFontPath = new URL(CascadiaMono, import.meta.url)
 
 	useEffect(() => {
-		fetch(options.fontPath ?? "/fonts/CascadiaMono-VariableFont_wght.ttf")
+		fetch(options.fontPath)
 			.then((res) => res.arrayBuffer())
 			.then((data) => {
 				setFontData(parse(data))
