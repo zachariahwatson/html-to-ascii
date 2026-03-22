@@ -1,16 +1,6 @@
 @import "tailwindcss";
-@font-face {
-	font-family: "Cascadia Mono";
-	src: url(/fonts/CascadiaMono-VariableFont_wght.ttf);
-}
-
-@font-face {
-	font-family: "Cascadia Mono Italic";
-	src: url(/fonts/CascadiaMono-Italic-VariableFont_wght.ttf);
-}
 
 :root {
-	font-family: "Cascadia Mono", "Courier New", Courier, monospace;
 	font-weight: 400;
 	margin: 0;
 }
