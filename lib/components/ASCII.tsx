@@ -50,6 +50,7 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const hasBL = cl.contains("ascii-border-bl")
 	const hasNoFill = cl.contains("ascii-no-fill")
 	const hasText = cl.contains("ascii-text")
+	const hasNewLine = rect.characters.some((c) => c.char === "\n")
 	const hasUnderline = cl.contains("ascii-underline")
 	const hasShadowTL = cl.contains("ascii-shadow-tl")
 	const hasShadowTR = cl.contains("ascii-shadow-tr")
@@ -503,20 +504,29 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	if (hasASCII || hasText) {
 		if (rect.characters.length > 0) {
 			let i = 0
+			const rowOffset = Math.round((rect.characters[i].rect.top - rect.rect.top) / grid.fontHeight)
+			let row = topRow + rowOffset
 			while (i < rect.characters.length) {
-				const rowOffset = Math.round((rect.characters[i].rect.top - rect.rect.top) / grid.fontHeight)
-				const row = topRow + rowOffset
-
 				let j = 0
+				const colOffset = Math.round((rect.characters[i].rect.left - rect.rect.left) / grid.fontWidth)
 				while (i + j < rect.characters.length) {
 					const c = rect.characters[i + j]
-					if (c.char === "\u{0A0}" || c.char === "\n") {
-						j++
-						break
+					if (hasNewLine) {
+						if (c.char === "\n") {
+							j++
+							row++
+							break
+						}
+					} else {
+						const computedRow = topRow + Math.round((c.rect.top - rect.rect.top) / grid.fontHeight)
+
+						if (row !== computedRow) {
+							row = computedRow
+							break
+						}
 					}
 
-					const colOffset = Math.round((c.rect.left - rect.rect.left) / grid.fontWidth)
-					const col = leftCol + colOffset
+					const col = leftCol + j + colOffset
 
 					if (!(col < 0 || col > maxCols)) {
 						if (hasUnderline && "abcdefhiklmnorstuvwxyz".includes(c.char)) {
