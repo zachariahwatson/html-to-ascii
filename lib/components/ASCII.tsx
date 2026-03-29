@@ -569,7 +569,7 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 				let char = text[i]
 
 				//sanitizing whitespace
-				if (char.trim() === "") char = "\u{0A0}"
+				if (char !== "\n" && char.trim() === "") char = "\u{0A0}"
 
 				const range = document.createRange()
 				range.setStart(textNode, i)
