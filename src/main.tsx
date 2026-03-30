@@ -6,7 +6,13 @@ import { ASCIIProvider } from "../lib/providers/ASCIIProvider.tsx"
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<ASCIIProvider sl="░" sr="░" st="░" sb="░" fontPath="CascadiaMono-VariableFont_wght.ttf">
+		<ASCIIProvider
+			sl="░"
+			sr="░"
+			st="░"
+			sb="░"
+			fontPath="https://raw.githubusercontent.com/zachariahwatson/html-to-ascii/main/CascadiaMono.woff"
+		>
 			<App />
 		</ASCIIProvider>
 	</StrictMode>,

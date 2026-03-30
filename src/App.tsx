@@ -25,7 +25,8 @@ function App() {
        ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼       ┼┼┼┼┼┼┼┼┼┼┼┼┼┼
 `}
 			</div>
-			<div className="ascii-text whitespace-pre-wrap">
+			<br />
+			<div className="ascii-text">
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam euismod eros nec libero finibus placerat.
 				Vestibulum cursus, elit eu rhoncus blandit, eros nisi volutpat mi, in tempus leo arcu in massa. Praesent
 				bibendum hendrerit ante ut lobortis. Donec felis libero, rutrum ac orci id, fringilla tristique sem.

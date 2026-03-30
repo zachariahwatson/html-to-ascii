@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+	font-family: "Cascadia Mono";
+	src: url("https://raw.githubusercontent.com/zachariahwatson/html-to-ascii/main/CascadiaMono.woff");
+	font-weight: 200 700;
+	font-style: normal;
+	font-display: swap;
+}
+
 :root {
 	font-weight: 400;
 	margin: 0;

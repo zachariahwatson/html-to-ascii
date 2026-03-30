@@ -21,7 +21,7 @@ export const defaultOptions: GridOptions = {
 	sb: "█",
 	debug: false,
 	font: "'Cascadia Mono', 'Courier New', Courier, monospace",
-	fontPath: "",
+	fontPath: "https://raw.githubusercontent.com/zachariahwatson/html-to-ascii/main/CascadiaMono.woff",
 	fontSize: 18,
 	fontWeight: 400,
 }

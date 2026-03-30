@@ -2,9 +2,10 @@
 
 @font-face {
 	font-family: "Cascadia Mono";
-	src:
-		local("Cascadia Mono"),
-		url(/CascadiaMono-VariableFont_wght.ttf) format(truetype);
+	src: url("https://raw.githubusercontent.com/zachariahwatson/html-to-ascii/main/CascadiaMono.woff");
+	font-weight: 200 700;
+	font-style: normal;
+	font-display: swap;
 }
 
 :root {
