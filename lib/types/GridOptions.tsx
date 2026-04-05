@@ -21,5 +21,7 @@ export interface GridOptions {
 	font: string
 	fontPath: string
 	fontSize: number
-	fontWeight: number
+	fontWeight: React.CSSProperties["fontWeight"]
+	fontColor: React.CSSProperties["color"]
+	bgColor: React.CSSProperties["backgroundColor"]
 }
