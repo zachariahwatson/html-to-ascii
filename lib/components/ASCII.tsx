@@ -674,12 +674,13 @@ const ASCIIGrid = ({
 	return (
 		<div
 			ref={parentRef}
-			className="ascii-parent"
+			className="ascii-parent min-h-screen"
 			style={{
 				fontFamily: grid.options.font,
 				fontSize: `${grid.options.fontSize}px`,
 				fontWeight: grid.options.fontWeight,
 				lineHeight: `${grid.fontHeight}px`,
+				backgroundColor: grid.options.bgColor,
 			}}
 		>
 			<div
