@@ -77,9 +77,9 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const biChar = getCharOverride(cl, "bi", grid.options.bi)
 	const iChar = getCharOverride(cl, "i", grid.options.i)
 	const shadowLChar = getCharOverride(cl, "sl", grid.options.sl)
-	const shadowRChar = getCharOverride(cl, "sl", grid.options.sr)
-	const shadowTChar = getCharOverride(cl, "sl", grid.options.st)
-	const shadowBChar = getCharOverride(cl, "sl", grid.options.sb)
+	const shadowRChar = getCharOverride(cl, "sr", grid.options.sr)
+	const shadowTChar = getCharOverride(cl, "st", grid.options.st)
+	const shadowBChar = getCharOverride(cl, "sb", grid.options.sb)
 
 	//determine if element is partially or fully off-screen
 	let leftOverflow = leftCol < 0 || leftCol > maxCols
