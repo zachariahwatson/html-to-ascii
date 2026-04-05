@@ -77,9 +77,9 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 	const biChar = getCharOverride(cl, "bi", grid.options.bi)
 	const iChar = getCharOverride(cl, "i", grid.options.i)
 	const shadowLChar = getCharOverride(cl, "sl", grid.options.sl)
-	const shadowRChar = getCharOverride(cl, "sl", grid.options.sr)
-	const shadowTChar = getCharOverride(cl, "sl", grid.options.st)
-	const shadowBChar = getCharOverride(cl, "sl", grid.options.sb)
+	const shadowRChar = getCharOverride(cl, "sr", grid.options.sr)
+	const shadowTChar = getCharOverride(cl, "st", grid.options.st)
+	const shadowBChar = getCharOverride(cl, "sb", grid.options.sb)
 
 	//determine if element is partially or fully off-screen
 	let leftOverflow = leftCol < 0 || leftCol > maxCols
@@ -674,12 +674,13 @@ const ASCIIGrid = ({
 	return (
 		<div
 			ref={parentRef}
-			className="ascii-parent"
+			className="ascii-parent min-h-screen"
 			style={{
 				fontFamily: grid.options.font,
 				fontSize: `${grid.options.fontSize}px`,
 				fontWeight: grid.options.fontWeight,
 				lineHeight: `${grid.fontHeight}px`,
+				backgroundColor: grid.options.bgColor,
 			}}
 		>
 			<div
@@ -696,7 +697,11 @@ const ASCIIGrid = ({
 			{parentRef.current && rectsRef.current && (
 				<div
 					className="fixed top-0 left-0 z-0 whitespace-pre"
-					style={{ width: grid.truncWidth, height: grid.truncHeight }}
+					style={{
+						width: grid.truncWidth,
+						height: grid.truncHeight,
+						color: grid.options.fontColor,
+					}}
 				>
 					{/* kind of ugly, but is required to get ASCII art to work (come back to this perhaps) - splits the grid string into rows */}
 					{Array.from({ length: grid.rows }, (_, r) => {

@@ -24,4 +24,6 @@ export const defaultOptions: GridOptions = {
 	fontPath: "https://raw.githubusercontent.com/zachariahwatson/html-to-ascii/main/CascadiaMono.woff",
 	fontSize: 18,
 	fontWeight: 400,
+	fontColor: "black",
+	bgColor: "white",
 }
