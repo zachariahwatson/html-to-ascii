@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.9.3] - 2026-04-05
+
+### Added
+
+- fontColor and bgColor options
+
 ## [0.9.2] - 2026-03-30
 
 ### Added
@@ -242,6 +248,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII box customization
 - Basic position change monitoring
 
+[0.9.3]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.8.3...v0.9.0
