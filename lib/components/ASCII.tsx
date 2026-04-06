@@ -701,6 +701,7 @@ const ASCIIGrid = ({
 						width: grid.truncWidth,
 						height: grid.truncHeight,
 						color: grid.options.fontColor,
+						textShadow: grid.options.textShadow,
 					}}
 				>
 					{/* kind of ugly, but is required to get ASCII art to work (come back to this perhaps) - splits the grid string into rows */}
