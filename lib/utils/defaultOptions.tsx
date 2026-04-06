@@ -26,4 +26,5 @@ export const defaultOptions: GridOptions = {
 	fontWeight: 400,
 	fontColor: "black",
 	bgColor: "white",
+	textShadow: "",
 }
