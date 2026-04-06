@@ -24,4 +24,5 @@ export interface GridOptions {
 	fontWeight: React.CSSProperties["fontWeight"]
 	fontColor: React.CSSProperties["color"]
 	bgColor: React.CSSProperties["backgroundColor"]
+	textShadow: React.CSSProperties["textShadow"]
 }
