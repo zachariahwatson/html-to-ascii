@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...crickets...
 
+## [0.9.5] - 2026-05-01
+
+### Added
+
+- Debug console logs for event listeners
+
+### Changed
+
+- Optimized listener scheduling to scope changes instead of fully redrawing grid on every change
+
 ## [0.9.4] - 2026-04-05
 
 ### Added
@@ -254,6 +264,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII box customization
 - Basic position change monitoring
 
+[0.9.5]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.9.4...v0.9.5
 [0.9.4]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/zachariahwatson/html-to-ascii/compare/v0.9.1...v0.9.2
