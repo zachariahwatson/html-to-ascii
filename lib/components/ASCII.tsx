@@ -623,11 +623,17 @@ const ASCIIGrid = ({
 	useLayoutEffect(() => {
 		if (!parentRef.current) return
 
+		const resizeObserver = new ResizeObserver(() => schedule("ResizeObserver"))
+
 		const schedule = (() => {
 			let scheduled = false
 			return () => {
 				if (scheduled) return
 				scheduled = true
+				if (reason !== "MutationObserver" && grid.options.debug) {
+					console.log(`[ASCIIGrid] schedule triggered by: ${reason}`)
+				}
+
 				requestAnimationFrame(() => {
 					rectsRef.current = getElements(parentRef)
 					forceRender()
@@ -636,8 +642,20 @@ const ASCIIGrid = ({
 			}
 		})()
 
-		const resizeObserver = new ResizeObserver(schedule)
-		const mutationObserver = new MutationObserver(schedule)
+		const mutationObserver = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (!(mutation.target instanceof Element)) continue
+				const root = mutation.target.closest<HTMLElement>('[class*="ascii"]') ?? (mutation.target as HTMLElement)
+				grid.options.debug && console.log("[ASCIIGrid] schedule triggered by: MutationObserver:", mutation)
+				schedule("MutationObserver", root)
+			}
+		})
+
+		const onScroll = () => schedule("scroll")
+		const onInput = (e: Event) => schedule(`input: ${e as InputEvent}`)
+		const onChange = (e: Event) => schedule(`change: ${e as unknown as ChangeEvent}`)
+		const onAnimationStart = (e: Event) => schedule(`animationstart: ${e as AnimationEvent}`)
+		const onTransitionStart = (e: Event) => schedule(`transitionstart: ${e as TransitionEvent}`)
 
 		resizeObserver.observe(parentRef.current)
 		mutationObserver.observe(parentRef.current, {
@@ -647,20 +665,20 @@ const ASCIIGrid = ({
 			subtree: true,
 		})
 
-		window.addEventListener("scroll", schedule, { passive: true })
-		parentRef.current.addEventListener("input", schedule)
-		parentRef.current.addEventListener("change", schedule)
-		parentRef.current.addEventListener("animationstart", schedule)
-		parentRef.current.addEventListener("transitionstart", schedule)
+		window.addEventListener("scroll", onScroll, { passive: true })
+		parentRef.current.addEventListener("input", onInput)
+		parentRef.current.addEventListener("change", onChange)
+		parentRef.current.addEventListener("animationstart", onAnimationStart)
+		parentRef.current.addEventListener("transitionstart", onTransitionStart)
 
 		return () => {
 			resizeObserver.disconnect()
 			mutationObserver.disconnect()
-			window.removeEventListener("scroll", schedule)
-			parentRef.current?.removeEventListener("input", schedule)
-			parentRef.current?.removeEventListener("change", schedule)
-			parentRef.current?.removeEventListener("animationstart", schedule)
-			parentRef.current?.removeEventListener("transitionstart", schedule)
+			window.removeEventListener("scroll", onScroll)
+			parentRef.current?.removeEventListener("input", onInput)
+			parentRef.current?.removeEventListener("change", onChange)
+			parentRef.current?.removeEventListener("animationstart", onAnimationStart)
+			parentRef.current?.removeEventListener("transitionstart", onTransitionStart)
 		}
 	}, [])
 
