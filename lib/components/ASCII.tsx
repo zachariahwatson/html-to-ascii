@@ -1,4 +1,4 @@
-import { useLayoutEffect, useReducer, useRef } from "react"
+import { useLayoutEffect, useReducer, useRef, type ChangeEvent } from "react"
 import type { GridData } from "../types/GridData"
 import type { Rect } from "../types/Rect"
 import { useGridContext } from "../hooks/useGridContext"
@@ -546,12 +546,19 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 }
 
 /** Returns elements (along with their text) that have any class that starts with "ascii". */
-function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
-	if (!ref.current) return []
+function getElements(root: HTMLElement | null): Rect[] {
+	if (!root) return []
 
 	const parentRectCache = new Map<HTMLElement, DOMRect>()
 
-	return Array.from(ref.current.querySelectorAll<HTMLElement>('[class*="ascii"]')).map((el) => {
+	const asciiSelector = '[class*="ascii"]'
+
+	const candidates = [
+		...(root.matches(asciiSelector) ? [root] : []),
+		...Array.from(root.querySelectorAll<HTMLElement>(asciiSelector)),
+	]
+
+	return candidates.map((el) => {
 		const parent = el.closest<HTMLElement>(".ascii-parent")
 
 		if (!parent) {
@@ -595,6 +602,7 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 		})
 
 		return {
+			el,
 			rect: el.getBoundingClientRect(),
 			parentRect,
 			characters: c,
@@ -615,7 +623,7 @@ const ASCIIGrid = ({
 }) => {
 	const parentRef = useRef<HTMLDivElement | null>(null)
 	const grid = useGridContext()
-	const rectsRef = useRef<Rect[]>([])
+	const rectsRef = useRef<Map<Element, Rect>>(new Map())
 	const reveal = gridReveal ? useReveal(grid.grid, revealDuration) : grid.grid
 	const [, forceRender] = useReducer((x) => x + 1, 0)
 
@@ -623,21 +631,60 @@ const ASCIIGrid = ({
 	useLayoutEffect(() => {
 		if (!parentRef.current) return
 
+		const resizeObserver = new ResizeObserver(() => schedule("ResizeObserver"))
+
 		const schedule = (() => {
 			let scheduled = false
-			return () => {
+			return (reason: string, root?: HTMLElement) => {
 				if (scheduled) return
 				scheduled = true
+				if (reason !== "MutationObserver" && grid.options.debug) {
+					console.log(`[ASCIIGrid] schedule triggered by: ${reason}`)
+				}
+
 				requestAnimationFrame(() => {
-					rectsRef.current = getElements(parentRef)
+					if (reason === "ResizeObserver") {
+						const fresh = getElements(parentRef.current)
+						rectsRef.current = new Map(fresh.map((r) => [r.el, r]))
+						for (const rect of fresh) {
+							resizeObserver.observe(rect.el)
+						}
+					} else {
+						const fresh = getElements(root || parentRef.current)
+
+						if (root) {
+							for (const rect of fresh) {
+								rectsRef.current.set(rect.el, rect)
+								resizeObserver.observe(rect.el)
+							}
+						} else {
+							rectsRef.current = new Map(fresh.map((r) => [r.el, r]))
+							for (const rect of fresh) {
+								resizeObserver.observe(rect.el)
+							}
+						}
+					}
+
 					forceRender()
 					scheduled = false
 				})
 			}
 		})()
 
-		const resizeObserver = new ResizeObserver(schedule)
-		const mutationObserver = new MutationObserver(schedule)
+		const mutationObserver = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (!(mutation.target instanceof Element)) continue
+				const root = mutation.target.closest<HTMLElement>('[class*="ascii"]') ?? (mutation.target as HTMLElement)
+				grid.options.debug && console.log("[ASCIIGrid] schedule triggered by: MutationObserver:", mutation)
+				schedule("MutationObserver", root)
+			}
+		})
+
+		const onScroll = () => schedule("scroll")
+		const onInput = (e: Event) => schedule(`input: ${e as InputEvent}`)
+		const onChange = (e: Event) => schedule(`change: ${e as unknown as ChangeEvent}`)
+		const onAnimationStart = (e: Event) => schedule(`animationstart: ${e as AnimationEvent}`)
+		const onTransitionStart = (e: Event) => schedule(`transitionstart: ${e as TransitionEvent}`)
 
 		resizeObserver.observe(parentRef.current)
 		mutationObserver.observe(parentRef.current, {
@@ -647,20 +694,20 @@ const ASCIIGrid = ({
 			subtree: true,
 		})
 
-		window.addEventListener("scroll", schedule, { passive: true })
-		parentRef.current.addEventListener("input", schedule)
-		parentRef.current.addEventListener("change", schedule)
-		parentRef.current.addEventListener("animationstart", schedule)
-		parentRef.current.addEventListener("transitionstart", schedule)
+		window.addEventListener("scroll", onScroll, { passive: true })
+		parentRef.current.addEventListener("input", onInput)
+		parentRef.current.addEventListener("change", onChange)
+		parentRef.current.addEventListener("animationstart", onAnimationStart)
+		parentRef.current.addEventListener("transitionstart", onTransitionStart)
 
 		return () => {
 			resizeObserver.disconnect()
 			mutationObserver.disconnect()
-			window.removeEventListener("scroll", schedule)
-			parentRef.current?.removeEventListener("input", schedule)
-			parentRef.current?.removeEventListener("change", schedule)
-			parentRef.current?.removeEventListener("animationstart", schedule)
-			parentRef.current?.removeEventListener("transitionstart", schedule)
+			window.removeEventListener("scroll", onScroll)
+			parentRef.current?.removeEventListener("input", onInput)
+			parentRef.current?.removeEventListener("change", onChange)
+			parentRef.current?.removeEventListener("animationstart", onAnimationStart)
+			parentRef.current?.removeEventListener("transitionstart", onTransitionStart)
 		}
 	}, [])
 
@@ -680,9 +727,13 @@ const ASCIIGrid = ({
 				fontSize: `${grid.options.fontSize}px`,
 				fontWeight: grid.options.fontWeight,
 				lineHeight: `${grid.fontHeight}px`,
-				backgroundColor: grid.options.bgColor,
 			}}
 		>
+			<style>{`
+				:root {
+					background-color: ${grid.options.bgColor ?? ""};
+				}
+			`}</style>
 			<div
 				style={{ width: grid.truncWidth, height: grid.truncHeight }}
 				//show actual DOM elements if debug is on
