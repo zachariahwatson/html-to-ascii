@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 
 export function useWindowDimensions() {
 	const [dimensions, setDimensions] = useState({
-		width: 0,
-		height: 0,
+		width: document.documentElement.clientWidth,
+		height: document.documentElement.clientHeight,
 	})
 	useEffect(() => {
 		const update = () =>
