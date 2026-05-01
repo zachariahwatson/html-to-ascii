@@ -1,4 +1,4 @@
-import { useLayoutEffect, useReducer, useRef } from "react"
+import { useLayoutEffect, useReducer, useRef, type ChangeEvent } from "react"
 import type { GridData } from "../types/GridData"
 import type { Rect } from "../types/Rect"
 import { useGridContext } from "../hooks/useGridContext"
@@ -546,12 +546,19 @@ const drawRect = ({ rect, grid }: { rect: Rect; grid: GridData }) => {
 }
 
 /** Returns elements (along with their text) that have any class that starts with "ascii". */
-function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
-	if (!ref.current) return []
+function getElements(root: HTMLElement | null): Rect[] {
+	if (!root) return []
 
 	const parentRectCache = new Map<HTMLElement, DOMRect>()
 
-	return Array.from(ref.current.querySelectorAll<HTMLElement>('[class*="ascii"]')).map((el) => {
+	const asciiSelector = '[class*="ascii"]'
+
+	const candidates = [
+		...(root.matches(asciiSelector) ? [root] : []),
+		...Array.from(root.querySelectorAll<HTMLElement>(asciiSelector)),
+	]
+
+	return candidates.map((el) => {
 		const parent = el.closest<HTMLElement>(".ascii-parent")
 
 		if (!parent) {
@@ -595,6 +602,7 @@ function getElements(ref: React.RefObject<HTMLDivElement | null>): Rect[] {
 		})
 
 		return {
+			el,
 			rect: el.getBoundingClientRect(),
 			parentRect,
 			characters: c,
@@ -615,7 +623,7 @@ const ASCIIGrid = ({
 }) => {
 	const parentRef = useRef<HTMLDivElement | null>(null)
 	const grid = useGridContext()
-	const rectsRef = useRef<Rect[]>([])
+	const rectsRef = useRef<Map<Element, Rect>>(new Map())
 	const reveal = gridReveal ? useReveal(grid.grid, revealDuration) : grid.grid
 	const [, forceRender] = useReducer((x) => x + 1, 0)
 
@@ -627,7 +635,7 @@ const ASCIIGrid = ({
 
 		const schedule = (() => {
 			let scheduled = false
-			return () => {
+			return (reason: string, root?: HTMLElement) => {
 				if (scheduled) return
 				scheduled = true
 				if (reason !== "MutationObserver" && grid.options.debug) {
@@ -635,7 +643,28 @@ const ASCIIGrid = ({
 				}
 
 				requestAnimationFrame(() => {
-					rectsRef.current = getElements(parentRef)
+					if (reason === "ResizeObserver") {
+						const fresh = getElements(parentRef.current)
+						rectsRef.current = new Map(fresh.map((r) => [r.el, r]))
+						for (const rect of fresh) {
+							resizeObserver.observe(rect.el)
+						}
+					} else {
+						const fresh = getElements(root || parentRef.current)
+
+						if (root) {
+							for (const rect of fresh) {
+								rectsRef.current.set(rect.el, rect)
+								resizeObserver.observe(rect.el)
+							}
+						} else {
+							rectsRef.current = new Map(fresh.map((r) => [r.el, r]))
+							for (const rect of fresh) {
+								resizeObserver.observe(rect.el)
+							}
+						}
+					}
+
 					forceRender()
 					scheduled = false
 				})
@@ -698,9 +727,13 @@ const ASCIIGrid = ({
 				fontSize: `${grid.options.fontSize}px`,
 				fontWeight: grid.options.fontWeight,
 				lineHeight: `${grid.fontHeight}px`,
-				backgroundColor: grid.options.bgColor,
 			}}
 		>
+			<style>{`
+				:root {
+					background-color: ${grid.options.bgColor ?? ""};
+				}
+			`}</style>
 			<div
 				style={{ width: grid.truncWidth, height: grid.truncHeight }}
 				//show actual DOM elements if debug is on
